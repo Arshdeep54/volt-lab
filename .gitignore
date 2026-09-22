@@ -16,3 +16,7 @@ experiments/local/
 
 # CI stays local until GitHub workflow access is enabled.
 /.github/workflows/
+
+# Local agent instructions and commit hooks.
+/AGENTS.md
+/.githooks/

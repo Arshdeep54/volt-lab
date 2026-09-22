@@ -61,6 +61,16 @@ Offline curated JSON reports and DQN model ZIP files are tracked. Generated per-
 
 Run artifact/model validation before trusting external files. Python model ZIP files should only be loaded from trusted sources.
 
+## Historical code provenance
+
+Published reports retain the commit IDs recorded when their experiments ran. Repository history was subsequently rewritten to exclude local development files. The simulator and training source at these commits is unchanged; source and model hashes in the reports remain valid. Use the corresponding current commit to inspect each original code snapshot.
+
+| Report    | Recorded commit                            | Current commit                                                                                                                     |
+| --------- | ------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------- |
+| benchmark | `7f22919bb221f0fb233980dbb855dd3e3cfb6837` | [5dccf0e449e75f56d5a745729a48127dc18bb986](https://github.com/Arshdeep54/volt-lab/commit/5dccf0e449e75f56d5a745729a48127dc18bb986) |
+| ablations | `b5e667e5d6fcd6cdc6c31b507e006ac013d027ed` | [f44aad98e4596eb28d28f382fb209da7a9d80a41](https://github.com/Arshdeep54/volt-lab/commit/f44aad98e4596eb28d28f382fb209da7a9d80a41) |
+| dqn       | `3b7b5048da924518934084c547ec4d8195c45ea1` | [723ea52c02d8ef56b0ce68997f469043073a28bb](https://github.com/Arshdeep54/volt-lab/commit/723ea52c02d8ef56b0ce68997f469043073a28bb) |
+
 ## References
 
 - [Stable-Baselines3 evaluation guidance](https://stable-baselines3.readthedocs.io/en/master/guide/rl_tips.html)
