@@ -1,0 +1,20 @@
+{
+  "name": "volt-lab",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test",
+    "benchmark": "node scripts/benchmark.mjs",
+    "build": "node scripts/build.mjs",
+    "predeploy": "npm run build",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.148.0"
+  },
+  "overrides": {
+    "sharp": "^0.35.5"
+  }
+}
