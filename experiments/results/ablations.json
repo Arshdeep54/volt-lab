@@ -1,0 +1,4762 @@
+{
+  "schemaVersion": 1,
+  "environmentVersion": "microgrid-v1",
+  "createdAt": "2026-10-07T21:17:57.197Z",
+  "provenance": {
+    "commit": "b5e667e5d6fcd6cdc6c31b507e006ac013d027ed",
+    "scenarioHash": "e84dcbf3d0f26b0d57caf100ae078b47226e4d283f29eceb957a2856cd684665",
+    "environmentHash": "108a44ef315b116f7f2b1371f6137aa357146ec92d1d3522625b28df0a338173"
+  },
+  "protocol": {
+    "episodes": 6000,
+    "trainingSeeds": [
+      42,
+      43,
+      44,
+      45,
+      46
+    ],
+    "validationSeeds": [
+      810000001,
+      810000002
+    ],
+    "testSeeds": [
+      910000001,
+      910000002,
+      910000003,
+      910000004,
+      910000005,
+      910000006,
+      910000007,
+      910000008,
+      910000009,
+      910000010
+    ],
+    "profiles": [
+      "balanced",
+      "cloudy",
+      "outage"
+    ],
+    "evaluationConfig": {
+      "observation": "hourly",
+      "dt": 0.25,
+      "steps": 672,
+      "capacity": 10,
+      "batteryPower": 3,
+      "efficiency": 0.95,
+      "gridLimit": 5,
+      "evCapacity": 40,
+      "evTarget": 32,
+      "evEfficiency": 0.92,
+      "evRates": [
+        0,
+        1.8,
+        3.6
+      ],
+      "wear": 0.015,
+      "carbonWeight": 0.05,
+      "unservedPenalty": 4,
+      "deadlinePenalty": 2,
+      "initialSoc": 5,
+      "initialEvSoc": 24
+    },
+    "spread": "sample standard deviation across independent training seeds",
+    "selection": "fixed final policy; no test-based checkpoint selection"
+  },
+  "variants": [
+    {
+      "name": "default",
+      "config": {},
+      "runs": [
+        {
+          "id": "q-42-5400bf9a-cbc4-47bd-a50f-c14e098136c0",
+          "seed": 42,
+          "episodes": 6000,
+          "seconds": 4.030888489,
+          "config": {
+            "observation": "hourly",
+            "dt": 0.25,
+            "steps": 672,
+            "capacity": 10,
+            "batteryPower": 3,
+            "efficiency": 0.95,
+            "gridLimit": 5,
+            "evCapacity": 40,
+            "evTarget": 32,
+            "evEfficiency": 0.92,
+            "evRates": [
+              0,
+              1.8,
+              3.6
+            ],
+            "wear": 0.015,
+            "carbonWeight": 0.05,
+            "unservedPenalty": 4,
+            "deadlinePenalty": 2,
+            "initialSoc": 5,
+            "initialEvSoc": 24
+          },
+          "evaluations": {
+            "balanced": {
+              "scenarios": 10,
+              "profile": "balanced",
+              "learned": {
+                "objective": 40.83468337262739,
+                "bill": 32.03046785011063,
+                "carbon": 100.70187324499916,
+                "unserved": 0,
+                "shortfall": 0.40290387388504845,
+                "gridEnergy": 211.99825044309756,
+                "departures": 7.000000000000001,
+                "readyDepartures": 6.9
+              },
+              "rule": {
+                "objective": 37.540625212233024,
+                "bill": 28.52557983260199,
+                "carbon": 112.5717812754504,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 241.91380743225454,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 62.21001439266476,
+                "bill": 45.214915842150525,
+                "carbon": 123.55762441115613,
+                "unserved": 2.513644200892886,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 237.8884118231086,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            },
+            "cloudy": {
+              "scenarios": 10,
+              "profile": "cloudy",
+              "learned": {
+                "objective": 49.95682369423055,
+                "bill": 40.144101357816794,
+                "carbon": 117.16301432186111,
+                "unserved": 0,
+                "shortfall": 0.40290387388504845,
+                "gridEnergy": 256.4855164930765,
+                "departures": 7.000000000000001,
+                "readyDepartures": 6.9
+              },
+              "rule": {
+                "objective": 41.47947503650901,
+                "bill": 32.05409249722124,
+                "carbon": 120.77852446858516,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 259.87979395746225,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 66.12776785782101,
+                "bill": 48.72060265977218,
+                "carbon": 131.7989573618484,
+                "unserved": 2.5136442008928865,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 255.72758808721852,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            },
+            "outage": {
+              "scenarios": 10,
+              "profile": "outage",
+              "learned": {
+                "objective": 73.68961732840633,
+                "bill": 29.112838110072953,
+                "carbon": 94.99171885393838,
+                "unserved": 8.986451645749337,
+                "shortfall": 0.44351841908250655,
+                "gridEnergy": 202.6211038430606,
+                "departures": 7.000000000000001,
+                "readyDepartures": 6.800000000000001
+              },
+              "rule": {
+                "objective": 37.540625212233024,
+                "bill": 28.52557983260199,
+                "carbon": 112.5717812754504,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 241.91380743225454,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 103.79002765743691,
+                "bill": 41.06555900907554,
+                "carbon": 116.06573012921523,
+                "unserved": 14.039635403878933,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 226.36242062012258,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            }
+          },
+          "severity": {
+            "1": {
+              "objective": 55.2260289705063,
+              "bill": 30.860919782629217,
+              "carbon": 98.43501049909959,
+              "unserved": 3.9109435711192826,
+              "shortfall": 0.40290387388504845,
+              "gridEnergy": 208.13137164690733,
+              "departures": 7.000000000000001,
+              "readyDepartures": 6.9
+            },
+            "3": {
+              "objective": 73.68961732840633,
+              "bill": 29.112838110072953,
+              "carbon": 94.99171885393838,
+              "unserved": 8.986451645749337,
+              "shortfall": 0.44351841908250655,
+              "gridEnergy": 202.6211038430606,
+              "departures": 7.000000000000001,
+              "readyDepartures": 6.800000000000001
+            },
+            "6": {
+              "objective": 119.53695335332729,
+              "bill": 27.096738369631435,
+              "carbon": 89.9068546194645,
+              "unserved": 21.02700652688364,
+              "shortfall": 0.40290387388504845,
+              "gridEnergy": 192.9505651679113,
+              "departures": 7.000000000000001,
+              "readyDepartures": 6.9
+            }
+          }
+        },
+        {
+          "id": "q-43-8e94cdcb-bdba-4010-9be1-c4d59552b957",
+          "seed": 43,
+          "episodes": 6000,
+          "seconds": 3.9475557130000003,
+          "config": {
+            "observation": "hourly",
+            "dt": 0.25,
+            "steps": 672,
+            "capacity": 10,
+            "batteryPower": 3,
+            "efficiency": 0.95,
+            "gridLimit": 5,
+            "evCapacity": 40,
+            "evTarget": 32,
+            "evEfficiency": 0.92,
+            "evRates": [
+              0,
+              1.8,
+              3.6
+            ],
+            "wear": 0.015,
+            "carbonWeight": 0.05,
+            "unservedPenalty": 4,
+            "deadlinePenalty": 2,
+            "initialSoc": 5,
+            "initialEvSoc": 24
+          },
+          "evaluations": {
+            "balanced": {
+              "scenarios": 10,
+              "profile": "balanced",
+              "learned": {
+                "objective": 57.23620969952157,
+                "bill": 44.94699774490878,
+                "carbon": 115.72498285251022,
+                "unserved": 1.0187719593114033,
+                "shortfall": 0.06759692572047271,
+                "gridEnergy": 227.34561067946123,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "rule": {
+                "objective": 37.540625212233024,
+                "bill": 28.52557983260199,
+                "carbon": 112.5717812754504,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 241.91380743225454,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 62.21001439266476,
+                "bill": 45.214915842150525,
+                "carbon": 123.55762441115613,
+                "unserved": 2.513644200892886,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 237.8884118231086,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            },
+            "cloudy": {
+              "scenarios": 10,
+              "profile": "cloudy",
+              "learned": {
+                "objective": 67.51652513326518,
+                "bill": 51.52376146975259,
+                "carbon": 129.13368045236132,
+                "unserved": 1.8169960149945878,
+                "shortfall": 0.06677453005758735,
+                "gridEnergy": 258.78267897335286,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "rule": {
+                "objective": 41.47947503650901,
+                "bill": 32.05409249722124,
+                "carbon": 120.77852446858516,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 259.87979395746225,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 66.12776785782101,
+                "bill": 48.72060265977218,
+                "carbon": 131.7989573618484,
+                "unserved": 2.5136442008928865,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 255.72758808721852,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            },
+            "outage": {
+              "scenarios": 10,
+              "profile": "outage",
+              "learned": {
+                "objective": 85.96802554830235,
+                "bill": 42.09619334206192,
+                "carbon": 110.51094206444998,
+                "unserved": 8.986451645749337,
+                "shortfall": 0.06836607684621362,
+                "gridEnergy": 219.2703230861535,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "rule": {
+                "objective": 37.540625212233024,
+                "bill": 28.52557983260199,
+                "carbon": 112.5717812754504,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 241.91380743225454,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 103.79002765743691,
+                "bill": 41.06555900907554,
+                "carbon": 116.06573012921523,
+                "unserved": 14.039635403878933,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 226.36242062012258,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            }
+          },
+          "severity": {
+            "1": {
+              "objective": 67.57886466721237,
+              "bill": 43.84676404970338,
+              "carbon": 113.76123872809407,
+              "unserved": 3.9109435711192826,
+              "shortfall": 0.06677453005758735,
+              "gridEnergy": 224.34563770350255,
+              "departures": 7.000000000000001,
+              "readyDepartures": 7.000000000000001
+            },
+            "3": {
+              "objective": 85.96802554830235,
+              "bill": 42.09619334206192,
+              "carbon": 110.51094206444998,
+              "unserved": 8.986451645749337,
+              "shortfall": 0.06836607684621362,
+              "gridEnergy": 219.2703230861535,
+              "departures": 7.000000000000001,
+              "readyDepartures": 7.000000000000001
+            },
+            "6": {
+              "objective": 128.78034015429432,
+              "bill": 37.28041154194213,
+              "carbon": 102.37874255900883,
+              "unserved": 21.02700652688364,
+              "shortfall": 0.08267192216085313,
+              "gridEnergy": 206.67494374559536,
+              "departures": 7.000000000000001,
+              "readyDepartures": 7.000000000000001
+            }
+          }
+        },
+        {
+          "id": "q-44-97ff9727-7dd5-4ce2-8610-b0b12089e4e0",
+          "seed": 44,
+          "episodes": 6000,
+          "seconds": 4.232586841000001,
+          "config": {
+            "observation": "hourly",
+            "dt": 0.25,
+            "steps": 672,
+            "capacity": 10,
+            "batteryPower": 3,
+            "efficiency": 0.95,
+            "gridLimit": 5,
+            "evCapacity": 40,
+            "evTarget": 32,
+            "evEfficiency": 0.92,
+            "evRates": [
+              0,
+              1.8,
+              3.6
+            ],
+            "wear": 0.015,
+            "carbonWeight": 0.05,
+            "unservedPenalty": 4,
+            "deadlinePenalty": 2,
+            "initialSoc": 5,
+            "initialEvSoc": 24
+          },
+          "evaluations": {
+            "balanced": {
+              "scenarios": 10,
+              "profile": "balanced",
+              "learned": {
+                "objective": 61.328029686812854,
+                "bill": 31.353623443443645,
+                "carbon": 106.19700971847182,
+                "unserved": 0,
+                "shortfall": 10.387663483576159,
+                "gridEnergy": 227.8516609428928,
+                "departures": 7.000000000000001,
+                "readyDepartures": 3.5
+              },
+              "rule": {
+                "objective": 37.540625212233024,
+                "bill": 28.52557983260199,
+                "carbon": 112.5717812754504,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 241.91380743225454,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 62.21001439266476,
+                "bill": 45.214915842150525,
+                "carbon": 123.55762441115613,
+                "unserved": 2.513644200892886,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 237.8884118231086,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            },
+            "cloudy": {
+              "scenarios": 10,
+              "profile": "cloudy",
+              "learned": {
+                "objective": 69.28883046939217,
+                "bill": 38.30860199387638,
+                "carbon": 119.96705482935062,
+                "unserved": 0,
+                "shortfall": 10.56647941281582,
+                "gridEnergy": 260.3352958465,
+                "departures": 7.000000000000001,
+                "readyDepartures": 3.4
+              },
+              "rule": {
+                "objective": 41.47947503650901,
+                "bill": 32.05409249722124,
+                "carbon": 120.77852446858516,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 259.87979395746225,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 66.12776785782101,
+                "bill": 48.72060265977218,
+                "carbon": 131.7989573618484,
+                "unserved": 2.5136442008928865,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 255.72758808721852,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            },
+            "outage": {
+              "scenarios": 10,
+              "profile": "outage",
+              "learned": {
+                "objective": 93.83115758644215,
+                "bill": 29.96219953546134,
+                "carbon": 103.47151967007669,
+                "unserved": 8.986451645749337,
+                "shortfall": 9.623460981629547,
+                "gridEnergy": 222.84061743930334,
+                "departures": 7.000000000000001,
+                "readyDepartures": 3.1
+              },
+              "rule": {
+                "objective": 37.540625212233024,
+                "bill": 28.52557983260199,
+                "carbon": 112.5717812754504,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 241.91380743225454,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 103.79002765743691,
+                "bill": 41.06555900907554,
+                "carbon": 116.06573012921523,
+                "unserved": 14.039635403878933,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 226.36242062012258,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            }
+          },
+          "severity": {
+            "1": {
+              "objective": 74.9169785438055,
+              "bill": 34.39763046891197,
+              "carbon": 108.56297390451421,
+              "unserved": 3.9109435711192826,
+              "shortfall": 8.032077345254049,
+              "gridEnergy": 226.76904543514107,
+              "departures": 7.000000000000001,
+              "readyDepartures": 4
+            },
+            "3": {
+              "objective": 93.83115758644215,
+              "bill": 29.96219953546134,
+              "carbon": 103.47151967007669,
+              "unserved": 8.986451645749337,
+              "shortfall": 9.623460981629547,
+              "gridEnergy": 222.84061743930334,
+              "departures": 7.000000000000001,
+              "readyDepartures": 3.1
+            },
+            "6": {
+              "objective": 144.30032429526764,
+              "bill": 26.245788392568137,
+              "carbon": 96.04861289060919,
+              "unserved": 21.02700652688364,
+              "shortfall": 12.781160940356786,
+              "gridEnergy": 208.59217329184517,
+              "departures": 7.000000000000001,
+              "readyDepartures": 3.2999999999999994
+            }
+          }
+        },
+        {
+          "id": "q-45-2602dbef-dce2-488c-bd9e-fc691bdb1c4b",
+          "seed": 45,
+          "episodes": 6000,
+          "seconds": 3.934815589,
+          "config": {
+            "observation": "hourly",
+            "dt": 0.25,
+            "steps": 672,
+            "capacity": 10,
+            "batteryPower": 3,
+            "efficiency": 0.95,
+            "gridLimit": 5,
+            "evCapacity": 40,
+            "evTarget": 32,
+            "evEfficiency": 0.92,
+            "evRates": [
+              0,
+              1.8,
+              3.6
+            ],
+            "wear": 0.015,
+            "carbonWeight": 0.05,
+            "unservedPenalty": 4,
+            "deadlinePenalty": 2,
+            "initialSoc": 5,
+            "initialEvSoc": 24
+          },
+          "evaluations": {
+            "balanced": {
+              "scenarios": 10,
+              "profile": "balanced",
+              "learned": {
+                "objective": 51.947506202646544,
+                "bill": 42.948469359419576,
+                "carbon": 121.99564625896258,
+                "unserved": 0,
+                "shortfall": 0.023636781592247403,
+                "gridEnergy": 243.16652545978812,
+                "departures": 7.000000000000001,
+                "readyDepartures": 6.9
+              },
+              "rule": {
+                "objective": 37.540625212233024,
+                "bill": 28.52557983260199,
+                "carbon": 112.5717812754504,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 241.91380743225454,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 62.21001439266476,
+                "bill": 45.214915842150525,
+                "carbon": 123.55762441115613,
+                "unserved": 2.513644200892886,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 237.8884118231086,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            },
+            "cloudy": {
+              "scenarios": 10,
+              "profile": "cloudy",
+              "learned": {
+                "objective": 58.17487676563642,
+                "bill": 48.451720734385496,
+                "carbon": 133.66381163745484,
+                "unserved": 0,
+                "shortfall": 0.02262646653270295,
+                "gridEnergy": 270.5672043553045,
+                "departures": 7.000000000000001,
+                "readyDepartures": 6.9
+              },
+              "rule": {
+                "objective": 41.47947503650901,
+                "bill": 32.05409249722124,
+                "carbon": 120.77852446858516,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 259.87979395746225,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 66.12776785782101,
+                "bill": 48.72060265977218,
+                "carbon": 131.7989573618484,
+                "unserved": 2.5136442008928865,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 255.72758808721852,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            },
+            "outage": {
+              "scenarios": 10,
+              "profile": "outage",
+              "learned": {
+                "objective": 84.36472528114713,
+                "bill": 39.30160429667323,
+                "carbon": 115.80518237075707,
+                "unserved": 8.986451645749337,
+                "shortfall": 0.22791951240165956,
+                "gridEnergy": 234.13126087689076,
+                "departures": 7.000000000000001,
+                "readyDepartures": 6.699999999999999
+              },
+              "rule": {
+                "objective": 37.540625212233024,
+                "bill": 28.52557983260199,
+                "carbon": 112.5717812754504,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 241.91380743225454,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 103.79002765743691,
+                "bill": 41.06555900907554,
+                "carbon": 116.06573012921523,
+                "unserved": 14.039635403878933,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 226.36242062012258,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            }
+          },
+          "severity": {
+            "1": {
+              "objective": 66.54376137185328,
+              "bill": 42.02261798799328,
+              "carbon": 119.5393407896535,
+              "unserved": 3.9109435711192826,
+              "shortfall": 0.023636781592247403,
+              "gridEnergy": 238.66489994659938,
+              "departures": 7.000000000000001,
+              "readyDepartures": 6.9
+            },
+            "3": {
+              "objective": 84.36472528114713,
+              "bill": 39.30160429667323,
+              "carbon": 115.80518237075707,
+              "unserved": 8.986451645749337,
+              "shortfall": 0.22791951240165956,
+              "gridEnergy": 234.13126087689076,
+              "departures": 7.000000000000001,
+              "readyDepartures": 6.699999999999999
+            },
+            "6": {
+              "objective": 128.85175656835926,
+              "bill": 35.3401694175187,
+              "carbon": 108.20554835441791,
+              "unserved": 21.02700652688364,
+              "shortfall": 0.6235106677354765,
+              "gridEnergy": 221.01141137857553,
+              "departures": 7.000000000000001,
+              "readyDepartures": 6.299999999999999
+            }
+          }
+        },
+        {
+          "id": "q-46-86726832-d3f5-4321-868a-a1c7d3f09ef7",
+          "seed": 46,
+          "episodes": 6000,
+          "seconds": 3.923438634,
+          "config": {
+            "observation": "hourly",
+            "dt": 0.25,
+            "steps": 672,
+            "capacity": 10,
+            "batteryPower": 3,
+            "efficiency": 0.95,
+            "gridLimit": 5,
+            "evCapacity": 40,
+            "evTarget": 32,
+            "evEfficiency": 0.92,
+            "evRates": [
+              0,
+              1.8,
+              3.6
+            ],
+            "wear": 0.015,
+            "carbonWeight": 0.05,
+            "unservedPenalty": 4,
+            "deadlinePenalty": 2,
+            "initialSoc": 5,
+            "initialEvSoc": 24
+          },
+          "evaluations": {
+            "balanced": {
+              "scenarios": 10,
+              "profile": "balanced",
+              "learned": {
+                "objective": 68.50026975808272,
+                "bill": 27.994574252353907,
+                "carbon": 98.18094979770076,
+                "unserved": 0,
+                "shortfall": 15.78961822222498,
+                "gridEnergy": 213.67943670071014,
+                "departures": 7.000000000000001,
+                "readyDepartures": 0.4
+              },
+              "rule": {
+                "objective": 37.540625212233024,
+                "bill": 28.52557983260199,
+                "carbon": 112.5717812754504,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 241.91380743225454,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 62.21001439266476,
+                "bill": 45.214915842150525,
+                "carbon": 123.55762441115613,
+                "unserved": 2.513644200892886,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 237.8884118231086,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            },
+            "cloudy": {
+              "scenarios": 10,
+              "profile": "cloudy",
+              "learned": {
+                "objective": 79.20892806869915,
+                "bill": 37.51334295053323,
+                "carbon": 116.34975814912482,
+                "unserved": 0,
+                "shortfall": 15.95917888092458,
+                "gridEnergy": 255.44562236465833,
+                "departures": 7.000000000000001,
+                "readyDepartures": 0.4
+              },
+              "rule": {
+                "objective": 41.47947503650901,
+                "bill": 32.05409249722124,
+                "carbon": 120.77852446858516,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 259.87979395746225,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 66.12776785782101,
+                "bill": 48.72060265977218,
+                "carbon": 131.7989573618484,
+                "unserved": 2.5136442008928865,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 255.72758808721852,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            },
+            "outage": {
+              "scenarios": 10,
+              "profile": "outage",
+              "learned": {
+                "objective": 99.06546641660194,
+                "bill": 31.09472876902203,
+                "carbon": 100.1724492779507,
+                "unserved": 8.986451645749337,
+                "shortfall": 11.704406507022036,
+                "gridEnergy": 212.92043036242694,
+                "departures": 7.000000000000001,
+                "readyDepartures": 2.0000000000000004
+              },
+              "rule": {
+                "objective": 37.540625212233024,
+                "bill": 28.52557983260199,
+                "carbon": 112.5717812754504,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 241.91380743225454,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 103.79002765743691,
+                "bill": 41.06555900907554,
+                "carbon": 116.06573012921523,
+                "unserved": 14.039635403878933,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 226.36242062012258,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            }
+          },
+          "severity": {
+            "1": {
+              "objective": 81.4095991511095,
+              "bill": 32.4539720290226,
+              "carbon": 102.9654303951906,
+              "unserved": 3.9109435711192826,
+              "shortfall": 12.251697529877358,
+              "gridEnergy": 217.50463755193795,
+              "departures": 7.000000000000001,
+              "readyDepartures": 1.7000000000000006
+            },
+            "3": {
+              "objective": 99.06546641660194,
+              "bill": 31.09472876902203,
+              "carbon": 100.1724492779507,
+              "unserved": 8.986451645749337,
+              "shortfall": 11.704406507022036,
+              "gridEnergy": 212.92043036242694,
+              "departures": 7.000000000000001,
+              "readyDepartures": 2.0000000000000004
+            },
+            "6": {
+              "objective": 144.2460448730496,
+              "bill": 24.606066743034365,
+              "carbon": 89.11121857617357,
+              "unserved": 21.02700652688364,
+              "shortfall": 13.639182919792434,
+              "gridEnergy": 195.7280716445166,
+              "departures": 7.000000000000001,
+              "readyDepartures": 0.7
+            }
+          }
+        }
+      ],
+      "summary": {
+        "balanced": {
+          "learned": {
+            "objective": {
+              "mean": 55.969339743938214,
+              "sd": 10.39925108985175,
+              "n": 5
+            },
+            "bill": {
+              "mean": 35.854826530047305,
+              "sd": 7.577226742016199,
+              "n": 5
+            },
+            "carbon": {
+              "mean": 108.56009237452892,
+              "sd": 10.086031577138998,
+              "n": 5
+            },
+            "unserved": {
+              "mean": 0.20375439186228067,
+              "sd": 0.4556086709181895,
+              "n": 5
+            },
+            "shortfall": {
+              "mean": 5.334283857399781,
+              "sd": 7.333316685996585,
+              "n": 5
+            },
+            "readyDepartures": {
+              "mean": 4.94,
+              "sd": 2.941598205057924,
+              "n": 5
+            },
+            "departures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            }
+          },
+          "rule": {
+            "objective": {
+              "mean": 37.540625212233024,
+              "sd": 0,
+              "n": 5
+            },
+            "bill": {
+              "mean": 28.525579832601988,
+              "sd": 3.972054645195637e-15,
+              "n": 5
+            },
+            "carbon": {
+              "mean": 112.57178127545039,
+              "sd": 1.5888218580782548e-14,
+              "n": 5
+            },
+            "unserved": {
+              "mean": 0,
+              "sd": 0,
+              "n": 5
+            },
+            "shortfall": {
+              "mean": 0.04071741065793652,
+              "sd": 0,
+              "n": 5
+            },
+            "readyDepartures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            },
+            "departures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            }
+          },
+          "noBattery": {
+            "objective": {
+              "mean": 62.21001439266477,
+              "sd": 7.944109290391274e-15,
+              "n": 5
+            },
+            "bill": {
+              "mean": 45.214915842150525,
+              "sd": 0,
+              "n": 5
+            },
+            "carbon": {
+              "mean": 123.55762441115613,
+              "sd": 0,
+              "n": 5
+            },
+            "unserved": {
+              "mean": 2.513644200892886,
+              "sd": 0,
+              "n": 5
+            },
+            "shortfall": {
+              "mean": 0.04071741065793652,
+              "sd": 0,
+              "n": 5
+            },
+            "readyDepartures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            },
+            "departures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            }
+          }
+        },
+        "cloudy": {
+          "learned": {
+            "objective": {
+              "mean": 64.8291968262447,
+              "sd": 11.173117227444822,
+              "n": 5
+            },
+            "bill": {
+              "mean": 43.1883057012729,
+              "sd": 6.373132103959093,
+              "n": 5
+            },
+            "carbon": {
+              "mean": 123.25546387803054,
+              "sd": 7.721843699143363,
+              "n": 5
+            },
+            "unserved": {
+              "mean": 0.3633992029989176,
+              "sd": 0.812585320874825,
+              "n": 5
+            },
+            "shortfall": {
+              "mean": 5.403592632843147,
+              "sd": 7.424942985516281,
+              "n": 5
+            },
+            "readyDepartures": {
+              "mean": 4.92,
+              "sd": 2.954149623834243,
+              "n": 5
+            },
+            "departures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            }
+          },
+          "rule": {
+            "objective": {
+              "mean": 41.47947503650901,
+              "sd": 0,
+              "n": 5
+            },
+            "bill": {
+              "mean": 32.05409249722124,
+              "sd": 0,
+              "n": 5
+            },
+            "carbon": {
+              "mean": 120.77852446858518,
+              "sd": 1.5888218580782548e-14,
+              "n": 5
+            },
+            "unserved": {
+              "mean": 0,
+              "sd": 0,
+              "n": 5
+            },
+            "shortfall": {
+              "mean": 0.04071741065793652,
+              "sd": 0,
+              "n": 5
+            },
+            "readyDepartures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            },
+            "departures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            }
+          },
+          "noBattery": {
+            "objective": {
+              "mean": 66.12776785782101,
+              "sd": 0,
+              "n": 5
+            },
+            "bill": {
+              "mean": 48.72060265977218,
+              "sd": 0,
+              "n": 5
+            },
+            "carbon": {
+              "mean": 131.7989573618484,
+              "sd": 0,
+              "n": 5
+            },
+            "unserved": {
+              "mean": 2.5136442008928865,
+              "sd": 0,
+              "n": 5
+            },
+            "shortfall": {
+              "mean": 0.04071741065793652,
+              "sd": 0,
+              "n": 5
+            },
+            "readyDepartures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            },
+            "departures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            }
+          }
+        },
+        "outage": {
+          "learned": {
+            "objective": {
+              "mean": 87.38379843217997,
+              "sd": 9.704117922501753,
+              "n": 5
+            },
+            "bill": {
+              "mean": 34.313512810658295,
+              "sd": 5.9538367502319405,
+              "n": 5
+            },
+            "carbon": {
+              "mean": 104.99036244743456,
+              "sd": 8.260284100478625,
+              "n": 5
+            },
+            "unserved": {
+              "mean": 8.986451645749337,
+              "sd": 0,
+              "n": 5
+            },
+            "shortfall": {
+              "mean": 4.413534299396392,
+              "sd": 5.754585947300776,
+              "n": 5
+            },
+            "readyDepartures": {
+              "mean": 5.12,
+              "sd": 2.3805461558222305,
+              "n": 5
+            },
+            "departures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            }
+          },
+          "rule": {
+            "objective": {
+              "mean": 37.540625212233024,
+              "sd": 0,
+              "n": 5
+            },
+            "bill": {
+              "mean": 28.525579832601988,
+              "sd": 3.972054645195637e-15,
+              "n": 5
+            },
+            "carbon": {
+              "mean": 112.57178127545039,
+              "sd": 1.5888218580782548e-14,
+              "n": 5
+            },
+            "unserved": {
+              "mean": 0,
+              "sd": 0,
+              "n": 5
+            },
+            "shortfall": {
+              "mean": 0.04071741065793652,
+              "sd": 0,
+              "n": 5
+            },
+            "readyDepartures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            },
+            "departures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            }
+          },
+          "noBattery": {
+            "objective": {
+              "mean": 103.79002765743692,
+              "sd": 1.5888218580782548e-14,
+              "n": 5
+            },
+            "bill": {
+              "mean": 41.06555900907554,
+              "sd": 0,
+              "n": 5
+            },
+            "carbon": {
+              "mean": 116.06573012921521,
+              "sd": 1.5888218580782548e-14,
+              "n": 5
+            },
+            "unserved": {
+              "mean": 14.039635403878933,
+              "sd": 0,
+              "n": 5
+            },
+            "shortfall": {
+              "mean": 0.04071741065793652,
+              "sd": 0,
+              "n": 5
+            },
+            "readyDepartures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            },
+            "departures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "no-carbon-cost",
+      "config": {
+        "carbonWeight": 0
+      },
+      "runs": [
+        {
+          "id": "q-42-6229f68a-17b7-4a4f-af26-8aedcfb75565",
+          "seed": 42,
+          "episodes": 6000,
+          "seconds": 3.972315266999998,
+          "config": {
+            "observation": "hourly",
+            "dt": 0.25,
+            "steps": 672,
+            "capacity": 10,
+            "batteryPower": 3,
+            "efficiency": 0.95,
+            "gridLimit": 5,
+            "evCapacity": 40,
+            "evTarget": 32,
+            "evEfficiency": 0.92,
+            "evRates": [
+              0,
+              1.8,
+              3.6
+            ],
+            "wear": 0.015,
+            "carbonWeight": 0,
+            "unservedPenalty": 4,
+            "deadlinePenalty": 2,
+            "initialSoc": 5,
+            "initialEvSoc": 24
+          },
+          "evaluations": {
+            "balanced": {
+              "scenarios": 10,
+              "profile": "balanced",
+              "learned": {
+                "objective": 39.37233042616317,
+                "bill": 28.133682604821054,
+                "carbon": 104.09234375232161,
+                "unserved": 0,
+                "shortfall": 1.2203209458842732,
+                "gridEnergy": 224.41439058780526,
+                "departures": 7.000000000000001,
+                "readyDepartures": 5.8999999999999995
+              },
+              "rule": {
+                "objective": 37.540625212233024,
+                "bill": 28.52557983260199,
+                "carbon": 112.5717812754504,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 241.91380743225454,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 62.21001439266476,
+                "bill": 45.214915842150525,
+                "carbon": 123.55762441115613,
+                "unserved": 2.513644200892886,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 237.8884118231086,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            },
+            "cloudy": {
+              "scenarios": 10,
+              "profile": "cloudy",
+              "learned": {
+                "objective": 46.942615077676095,
+                "bill": 34.9797232575679,
+                "carbon": 117.08414992630104,
+                "unserved": 0,
+                "shortfall": 1.2203209458842732,
+                "gridEnergy": 256.44499721226185,
+                "departures": 7.000000000000001,
+                "readyDepartures": 5.8999999999999995
+              },
+              "rule": {
+                "objective": 41.47947503650901,
+                "bill": 32.05409249722124,
+                "carbon": 120.77852446858516,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 259.87979395746225,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 66.12776785782101,
+                "bill": 48.72060265977218,
+                "carbon": 131.7989573618484,
+                "unserved": 2.5136442008928865,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 255.72758808721852,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            },
+            "outage": {
+              "scenarios": 10,
+              "profile": "outage",
+              "learned": {
+                "objective": 74.58669548124519,
+                "bill": 28.53618314363155,
+                "carbon": 100.62589454222567,
+                "unserved": 8.986451645749337,
+                "shortfall": 0.8219754734650176,
+                "gridEnergy": 216.87748813249235,
+                "departures": 7.000000000000001,
+                "readyDepartures": 6.3
+              },
+              "rule": {
+                "objective": 37.540625212233024,
+                "bill": 28.52557983260199,
+                "carbon": 112.5717812754504,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 241.91380743225454,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 103.79002765743691,
+                "bill": 41.06555900907554,
+                "carbon": 116.06573012921523,
+                "unserved": 14.039635403878933,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 226.36242062012258,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            }
+          },
+          "severity": {
+            "1": {
+              "objective": 60.63488266882814,
+              "bill": 34.641098303489976,
+              "carbon": 107.7442906996973,
+              "unserved": 3.9109435711192826,
+              "shortfall": 0.8219754734650176,
+              "gridEnergy": 222.21344726902058,
+              "departures": 7.000000000000001,
+              "readyDepartures": 6.3
+            },
+            "3": {
+              "objective": 74.58669548124519,
+              "bill": 28.53618314363155,
+              "carbon": 100.62589454222567,
+              "unserved": 8.986451645749337,
+              "shortfall": 0.8219754734650176,
+              "gridEnergy": 216.87748813249235,
+              "departures": 7.000000000000001,
+              "readyDepartures": 6.3
+            },
+            "6": {
+              "objective": 118.89466246262835,
+              "bill": 25.17428408166178,
+              "carbon": 94.3359288217477,
+              "unserved": 21.02700652688364,
+              "shortfall": 0.8219754734650176,
+              "gridEnergy": 204.94602857130576,
+              "departures": 7.000000000000001,
+              "readyDepartures": 6.3
+            }
+          }
+        },
+        {
+          "id": "q-43-287f280c-0855-4daa-a5d4-72a65911d430",
+          "seed": 43,
+          "episodes": 6000,
+          "seconds": 4.141318333999999,
+          "config": {
+            "observation": "hourly",
+            "dt": 0.25,
+            "steps": 672,
+            "capacity": 10,
+            "batteryPower": 3,
+            "efficiency": 0.95,
+            "gridLimit": 5,
+            "evCapacity": 40,
+            "evTarget": 32,
+            "evEfficiency": 0.92,
+            "evRates": [
+              0,
+              1.8,
+              3.6
+            ],
+            "wear": 0.015,
+            "carbonWeight": 0,
+            "unservedPenalty": 4,
+            "deadlinePenalty": 2,
+            "initialSoc": 5,
+            "initialEvSoc": 24
+          },
+          "evaluations": {
+            "balanced": {
+              "scenarios": 10,
+              "profile": "balanced",
+              "learned": {
+                "objective": 61.33677096560521,
+                "bill": 53.56839042655031,
+                "carbon": 134.84764760169332,
+                "unserved": 0,
+                "shortfall": 0,
+                "gridEnergy": 255.03112346389648,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "rule": {
+                "objective": 37.540625212233024,
+                "bill": 28.52557983260199,
+                "carbon": 112.5717812754504,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 241.91380743225454,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 62.21001439266476,
+                "bill": 45.214915842150525,
+                "carbon": 123.55762441115613,
+                "unserved": 2.513644200892886,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 237.8884118231086,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            },
+            "cloudy": {
+              "scenarios": 10,
+              "profile": "cloudy",
+              "learned": {
+                "objective": 65.25452443076149,
+                "bill": 57.07407724417196,
+                "carbon": 143.0889805523856,
+                "unserved": 0,
+                "shortfall": 0,
+                "gridEnergy": 272.87029972800644,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "rule": {
+                "objective": 41.47947503650901,
+                "bill": 32.05409249722124,
+                "carbon": 120.77852446858516,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 259.87979395746225,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 66.12776785782101,
+                "bill": 48.72060265977218,
+                "carbon": 131.7989573618484,
+                "unserved": 2.5136442008928865,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 255.72758808721852,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            },
+            "outage": {
+              "scenarios": 10,
+              "profile": "outage",
+              "learned": {
+                "objective": 93.66743889279897,
+                "bill": 50.2402841062882,
+                "carbon": 128.8071542279836,
+                "unserved": 8.986451645749337,
+                "shortfall": 0,
+                "gridEnergy": 246.18470098929478,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "rule": {
+                "objective": 37.540625212233024,
+                "bill": 28.52557983260199,
+                "carbon": 112.5717812754504,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 241.91380743225454,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 103.79002765743691,
+                "bill": 41.06555900907554,
+                "carbon": 116.06573012921523,
+                "unserved": 14.039635403878933,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 226.36242062012258,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            }
+          },
+          "severity": {
+            "1": {
+              "objective": 75.58139516521258,
+              "bill": 52.322999768649794,
+              "carbon": 132.5462981141963,
+              "unserved": 3.9109435711192826,
+              "shortfall": 0,
+              "gridEnergy": 251.07679363301847,
+              "departures": 7.000000000000001,
+              "readyDepartures": 7.000000000000001
+            },
+            "3": {
+              "objective": 93.66743889279897,
+              "bill": 50.2402841062882,
+              "carbon": 128.8071542279836,
+              "unserved": 8.986451645749337,
+              "shortfall": 0,
+              "gridEnergy": 246.18470098929478,
+              "departures": 7.000000000000001,
+              "readyDepartures": 7.000000000000001
+            },
+            "6": {
+              "objective": 135.27256009757684,
+              "bill": 44.04330583282909,
+              "carbon": 119.62338154271372,
+              "unserved": 21.02700652688364,
+              "shortfall": 0.06905221450226265,
+              "gridEnergy": 233.56513856736504,
+              "departures": 7.000000000000001,
+              "readyDepartures": 6.9
+            }
+          }
+        },
+        {
+          "id": "q-44-1db5dc91-42ce-440c-bb0c-97ba32d01557",
+          "seed": 44,
+          "episodes": 6000,
+          "seconds": 4.526362163999998,
+          "config": {
+            "observation": "hourly",
+            "dt": 0.25,
+            "steps": 672,
+            "capacity": 10,
+            "batteryPower": 3,
+            "efficiency": 0.95,
+            "gridLimit": 5,
+            "evCapacity": 40,
+            "evTarget": 32,
+            "evEfficiency": 0.92,
+            "evRates": [
+              0,
+              1.8,
+              3.6
+            ],
+            "wear": 0.015,
+            "carbonWeight": 0,
+            "unservedPenalty": 4,
+            "deadlinePenalty": 2,
+            "initialSoc": 5,
+            "initialEvSoc": 24
+          },
+          "evaluations": {
+            "balanced": {
+              "scenarios": 10,
+              "profile": "balanced",
+              "learned": {
+                "objective": 35.938912412240526,
+                "bill": 27.416389027456926,
+                "carbon": 97.822451546492,
+                "unserved": 0,
+                "shortfall": 0,
+                "gridEnergy": 211.29047282679895,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "rule": {
+                "objective": 37.540625212233024,
+                "bill": 28.52557983260199,
+                "carbon": 112.5717812754504,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 241.91380743225454,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 62.21001439266476,
+                "bill": 45.214915842150525,
+                "carbon": 123.55762441115613,
+                "unserved": 2.513644200892886,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 237.8884118231086,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            },
+            "cloudy": {
+              "scenarios": 10,
+              "profile": "cloudy",
+              "learned": {
+                "objective": 52.223659905075394,
+                "bill": 40.33457076941775,
+                "carbon": 121.30139681645879,
+                "unserved": 0.6697655064007342,
+                "shortfall": 0,
+                "gridEnergy": 254.97488285394388,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "rule": {
+                "objective": 41.47947503650901,
+                "bill": 32.05409249722124,
+                "carbon": 120.77852446858516,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 259.87979395746225,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 66.12776785782101,
+                "bill": 48.72060265977218,
+                "carbon": 131.7989573618484,
+                "unserved": 2.5136442008928865,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 255.72758808721852,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            },
+            "outage": {
+              "scenarios": 10,
+              "profile": "outage",
+              "learned": {
+                "objective": 73.84500250814995,
+                "bill": 29.616383218810924,
+                "carbon": 97.9219976676221,
+                "unserved": 8.986451645749337,
+                "shortfall": 0,
+                "gridEnergy": 207.33770050975002,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "rule": {
+                "objective": 37.540625212233024,
+                "bill": 28.52557983260199,
+                "carbon": 112.5717812754504,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 241.91380743225454,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 103.79002765743691,
+                "bill": 41.06555900907554,
+                "carbon": 116.06573012921523,
+                "unserved": 14.039635403878933,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 226.36242062012258,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            }
+          },
+          "severity": {
+            "1": {
+              "objective": 56.88881948636229,
+              "bill": 32.86702193141359,
+              "carbon": 102.58960096843178,
+              "unserved": 3.9109435711192826,
+              "shortfall": 0,
+              "gridEnergy": 212.77879034766406,
+              "departures": 7.000000000000001,
+              "readyDepartures": 7.000000000000001
+            },
+            "3": {
+              "objective": 73.84500250814995,
+              "bill": 29.616383218810924,
+              "carbon": 97.9219976676221,
+              "unserved": 8.986451645749337,
+              "shortfall": 0,
+              "gridEnergy": 207.33770050975002,
+              "departures": 7.000000000000001,
+              "readyDepartures": 7.000000000000001
+            },
+            "6": {
+              "objective": 116.3334426411577,
+              "bill": 24.367560991333693,
+              "carbon": 89.99423554021764,
+              "unserved": 21.02700652688364,
+              "shortfall": 0,
+              "gridEnergy": 196.11698518309478,
+              "departures": 7.000000000000001,
+              "readyDepartures": 7.000000000000001
+            }
+          }
+        },
+        {
+          "id": "q-45-8437e4e2-37fd-44f9-94e9-7083e05ef0e0",
+          "seed": 45,
+          "episodes": 6000,
+          "seconds": 4.333568067999997,
+          "config": {
+            "observation": "hourly",
+            "dt": 0.25,
+            "steps": 672,
+            "capacity": 10,
+            "batteryPower": 3,
+            "efficiency": 0.95,
+            "gridLimit": 5,
+            "evCapacity": 40,
+            "evTarget": 32,
+            "evEfficiency": 0.92,
+            "evRates": [
+              0,
+              1.8,
+              3.6
+            ],
+            "wear": 0.015,
+            "carbonWeight": 0,
+            "unservedPenalty": 4,
+            "deadlinePenalty": 2,
+            "initialSoc": 5,
+            "initialEvSoc": 24
+          },
+          "evaluations": {
+            "balanced": {
+              "scenarios": 10,
+              "profile": "balanced",
+              "learned": {
+                "objective": 39.70241045208183,
+                "bill": 29.674028794923885,
+                "carbon": 96.67808525192135,
+                "unserved": 0,
+                "shortfall": 0.7239701801851535,
+                "gridEnergy": 205.25246652585767,
+                "departures": 7.000000000000001,
+                "readyDepartures": 5.199999999999999
+              },
+              "rule": {
+                "objective": 37.540625212233024,
+                "bill": 28.52557983260199,
+                "carbon": 112.5717812754504,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 241.91380743225454,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 62.21001439266476,
+                "bill": 45.214915842150525,
+                "carbon": 123.55762441115613,
+                "unserved": 2.513644200892886,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 237.8884118231086,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            },
+            "cloudy": {
+              "scenarios": 10,
+              "profile": "cloudy",
+              "learned": {
+                "objective": 51.822430560788185,
+                "bill": 40.48170390245233,
+                "carbon": 116.82335861167402,
+                "unserved": 0.11178152080901768,
+                "shortfall": 0.7363678356646591,
+                "gridEnergy": 253.83451519241743,
+                "departures": 7.000000000000001,
+                "readyDepartures": 5.1
+              },
+              "rule": {
+                "objective": 41.47947503650901,
+                "bill": 32.05409249722124,
+                "carbon": 120.77852446858516,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 259.87979395746225,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 66.12776785782101,
+                "bill": 48.72060265977218,
+                "carbon": 131.7989573618484,
+                "unserved": 2.5136442008928865,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 255.72758808721852,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            },
+            "outage": {
+              "scenarios": 10,
+              "profile": "outage",
+              "learned": {
+                "objective": 75.10681394673693,
+                "bill": 29.338415967568455,
+                "carbon": 93.94045269646764,
+                "unserved": 8.986451645749337,
+                "shortfall": 0.7204236273864041,
+                "gridEnergy": 199.08481575943927,
+                "departures": 7.000000000000001,
+                "readyDepartures": 5.299999999999999
+              },
+              "rule": {
+                "objective": 37.540625212233024,
+                "bill": 28.52557983260199,
+                "carbon": 112.5717812754504,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 241.91380743225454,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 103.79002765743691,
+                "bill": 41.06555900907554,
+                "carbon": 116.06573012921523,
+                "unserved": 14.039635403878933,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 226.36242062012258,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            }
+          },
+          "severity": {
+            "1": {
+              "objective": 56.08437437254717,
+              "bill": 30.389116721631613,
+              "carbon": 95.75704149412317,
+              "unserved": 3.9109435711192826,
+              "shortfall": 0.7751649849734533,
+              "gridEnergy": 202.22133772250527,
+              "departures": 7.000000000000001,
+              "readyDepartures": 5.199999999999999
+            },
+            "3": {
+              "objective": 75.10681394673693,
+              "bill": 29.338415967568455,
+              "carbon": 93.94045269646764,
+              "unserved": 8.986451645749337,
+              "shortfall": 0.7204236273864041,
+              "gridEnergy": 199.08481575943927,
+              "departures": 7.000000000000001,
+              "readyDepartures": 5.299999999999999
+            },
+            "6": {
+              "objective": 118.33836182067333,
+              "bill": 25.131536561690115,
+              "carbon": 85.57244434250369,
+              "unserved": 21.02700652688364,
+              "shortfall": 0.5632067481184879,
+              "gridEnergy": 184.8729609124917,
+              "departures": 7.000000000000001,
+              "readyDepartures": 5.799999999999999
+            }
+          }
+        },
+        {
+          "id": "q-46-a629f794-a1a5-4ead-812a-f03dc012d658",
+          "seed": 46,
+          "episodes": 6000,
+          "seconds": 4.087803777000001,
+          "config": {
+            "observation": "hourly",
+            "dt": 0.25,
+            "steps": 672,
+            "capacity": 10,
+            "batteryPower": 3,
+            "efficiency": 0.95,
+            "gridLimit": 5,
+            "evCapacity": 40,
+            "evTarget": 32,
+            "evEfficiency": 0.92,
+            "evRates": [
+              0,
+              1.8,
+              3.6
+            ],
+            "wear": 0.015,
+            "carbonWeight": 0,
+            "unservedPenalty": 4,
+            "deadlinePenalty": 2,
+            "initialSoc": 5,
+            "initialEvSoc": 24
+          },
+          "evaluations": {
+            "balanced": {
+              "scenarios": 10,
+              "profile": "balanced",
+              "learned": {
+                "objective": 47.41239563932442,
+                "bill": 36.035271736287264,
+                "carbon": 108.0516235681267,
+                "unserved": 0.8168734793306844,
+                "shortfall": 0.013979665196082536,
+                "gridEnergy": 218.8995161266008,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "rule": {
+                "objective": 37.540625212233024,
+                "bill": 28.52557983260199,
+                "carbon": 112.5717812754504,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 241.91380743225454,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 62.21001439266476,
+                "bill": 45.214915842150525,
+                "carbon": 123.55762441115613,
+                "unserved": 2.513644200892886,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 237.8884118231086,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            },
+            "cloudy": {
+              "scenarios": 10,
+              "profile": "cloudy",
+              "learned": {
+                "objective": 54.617560847060055,
+                "bill": 42.903309746886976,
+                "carbon": 120.76472916679883,
+                "unserved": 0.7023941465219723,
+                "shortfall": 0.013185881587677528,
+                "gridEnergy": 254.1545473582367,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "rule": {
+                "objective": 41.47947503650901,
+                "bill": 32.05409249722124,
+                "carbon": 120.77852446858516,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 259.87979395746225,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 66.12776785782101,
+                "bill": 48.72060265977218,
+                "carbon": 131.7989573618484,
+                "unserved": 2.5136442008928865,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 255.72758808721852,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            },
+            "outage": {
+              "scenarios": 10,
+              "profile": "outage",
+              "learned": {
+                "objective": 76.83217902163685,
+                "bill": 32.99612051896905,
+                "carbon": 102.4927238019802,
+                "unserved": 8.989263766007877,
+                "shortfall": 0.01786645721038944,
+                "gridEnergy": 210.39446848828572,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "rule": {
+                "objective": 37.540625212233024,
+                "bill": 28.52557983260199,
+                "carbon": 112.5717812754504,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 241.91380743225454,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 103.79002765743691,
+                "bill": 41.06555900907554,
+                "carbon": 116.06573012921523,
+                "unserved": 14.039635403878933,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 226.36242062012258,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            }
+          },
+          "severity": {
+            "1": {
+              "objective": 58.49306213830929,
+              "bill": 34.84198592229115,
+              "carbon": 105.97533392244935,
+              "unserved": 3.9109435711192826,
+              "shortfall": 0.013185881587677528,
+              "gridEnergy": 215.7211680504463,
+              "departures": 7.000000000000001,
+              "readyDepartures": 7.000000000000001
+            },
+            "3": {
+              "objective": 76.83217902163685,
+              "bill": 32.99612051896905,
+              "carbon": 102.4927238019802,
+              "unserved": 8.989263766007877,
+              "shortfall": 0.01786645721038944,
+              "gridEnergy": 210.39446848828572,
+              "departures": 7.000000000000001,
+              "readyDepartures": 7.000000000000001
+            },
+            "6": {
+              "objective": 121.32761223474104,
+              "bill": 29.26990503935708,
+              "carbon": 95.24130292169207,
+              "unserved": 21.02981864714218,
+              "shortfall": 0.20706568830832772,
+              "gridEnergy": 198.67262909697487,
+              "departures": 7.000000000000001,
+              "readyDepartures": 6.9
+            }
+          }
+        }
+      ],
+      "summary": {
+        "balanced": {
+          "learned": {
+            "objective": {
+              "mean": 44.75256397908303,
+              "sd": 10.176468487454112,
+              "n": 5
+            },
+            "bill": {
+              "mean": 34.96555251800788,
+              "sd": 10.94159970807737,
+              "n": 5
+            },
+            "carbon": {
+              "mean": 108.29843034411098,
+              "sd": 15.551459471881959,
+              "n": 5
+            },
+            "unserved": {
+              "mean": 0.1633746958661369,
+              "sd": 0.365316925760036,
+              "n": 5
+            },
+            "shortfall": {
+              "mean": 0.39165415825310185,
+              "sd": 0.5582442488318793,
+              "n": 5
+            },
+            "readyDepartures": {
+              "mean": 6.42,
+              "sd": 0.8318653737234176,
+              "n": 5
+            },
+            "departures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            }
+          },
+          "rule": {
+            "objective": {
+              "mean": 37.540625212233024,
+              "sd": 0,
+              "n": 5
+            },
+            "bill": {
+              "mean": 28.525579832601988,
+              "sd": 3.972054645195637e-15,
+              "n": 5
+            },
+            "carbon": {
+              "mean": 112.57178127545039,
+              "sd": 1.5888218580782548e-14,
+              "n": 5
+            },
+            "unserved": {
+              "mean": 0,
+              "sd": 0,
+              "n": 5
+            },
+            "shortfall": {
+              "mean": 0.04071741065793652,
+              "sd": 0,
+              "n": 5
+            },
+            "readyDepartures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            },
+            "departures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            }
+          },
+          "noBattery": {
+            "objective": {
+              "mean": 62.21001439266477,
+              "sd": 7.944109290391274e-15,
+              "n": 5
+            },
+            "bill": {
+              "mean": 45.214915842150525,
+              "sd": 0,
+              "n": 5
+            },
+            "carbon": {
+              "mean": 123.55762441115613,
+              "sd": 0,
+              "n": 5
+            },
+            "unserved": {
+              "mean": 2.513644200892886,
+              "sd": 0,
+              "n": 5
+            },
+            "shortfall": {
+              "mean": 0.04071741065793652,
+              "sd": 0,
+              "n": 5
+            },
+            "readyDepartures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            },
+            "departures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            }
+          }
+        },
+        "cloudy": {
+          "learned": {
+            "objective": {
+              "mean": 54.17215816427224,
+              "sd": 6.793404598065533,
+              "n": 5
+            },
+            "bill": {
+              "mean": 43.15467698409938,
+              "sd": 8.302718555935144,
+              "n": 5
+            },
+            "carbon": {
+              "mean": 123.81252301472367,
+              "sd": 10.969230155236632,
+              "n": 5
+            },
+            "unserved": {
+              "mean": 0.29678823474634486,
+              "sd": 0.3584767069168098,
+              "n": 5
+            },
+            "shortfall": {
+              "mean": 0.39397493262732197,
+              "sd": 0.5602484783881772,
+              "n": 5
+            },
+            "readyDepartures": {
+              "mean": 6.4,
+              "sd": 0.868907359849139,
+              "n": 5
+            },
+            "departures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            }
+          },
+          "rule": {
+            "objective": {
+              "mean": 41.47947503650901,
+              "sd": 0,
+              "n": 5
+            },
+            "bill": {
+              "mean": 32.05409249722124,
+              "sd": 0,
+              "n": 5
+            },
+            "carbon": {
+              "mean": 120.77852446858518,
+              "sd": 1.5888218580782548e-14,
+              "n": 5
+            },
+            "unserved": {
+              "mean": 0,
+              "sd": 0,
+              "n": 5
+            },
+            "shortfall": {
+              "mean": 0.04071741065793652,
+              "sd": 0,
+              "n": 5
+            },
+            "readyDepartures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            },
+            "departures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            }
+          },
+          "noBattery": {
+            "objective": {
+              "mean": 66.12776785782101,
+              "sd": 0,
+              "n": 5
+            },
+            "bill": {
+              "mean": 48.72060265977218,
+              "sd": 0,
+              "n": 5
+            },
+            "carbon": {
+              "mean": 131.7989573618484,
+              "sd": 0,
+              "n": 5
+            },
+            "unserved": {
+              "mean": 2.5136442008928865,
+              "sd": 0,
+              "n": 5
+            },
+            "shortfall": {
+              "mean": 0.04071741065793652,
+              "sd": 0,
+              "n": 5
+            },
+            "readyDepartures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            },
+            "departures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            }
+          }
+        },
+        "outage": {
+          "learned": {
+            "objective": {
+              "mean": 78.80762597011358,
+              "sd": 8.379384317969214,
+              "n": 5
+            },
+            "bill": {
+              "mean": 34.14547739105363,
+              "sd": 9.15762714796432,
+              "n": 5
+            },
+            "carbon": {
+              "mean": 104.75764458725584,
+              "sd": 13.823149494323555,
+              "n": 5
+            },
+            "unserved": {
+              "mean": 8.987014069801045,
+              "sd": 0.0012576184117997693,
+              "n": 5
+            },
+            "shortfall": {
+              "mean": 0.31205311161236227,
+              "sd": 0.42073963737479264,
+              "n": 5
+            },
+            "readyDepartures": {
+              "mean": 6.5200000000000005,
+              "sd": 0.7463243262818124,
+              "n": 5
+            },
+            "departures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            }
+          },
+          "rule": {
+            "objective": {
+              "mean": 37.540625212233024,
+              "sd": 0,
+              "n": 5
+            },
+            "bill": {
+              "mean": 28.525579832601988,
+              "sd": 3.972054645195637e-15,
+              "n": 5
+            },
+            "carbon": {
+              "mean": 112.57178127545039,
+              "sd": 1.5888218580782548e-14,
+              "n": 5
+            },
+            "unserved": {
+              "mean": 0,
+              "sd": 0,
+              "n": 5
+            },
+            "shortfall": {
+              "mean": 0.04071741065793652,
+              "sd": 0,
+              "n": 5
+            },
+            "readyDepartures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            },
+            "departures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            }
+          },
+          "noBattery": {
+            "objective": {
+              "mean": 103.79002765743692,
+              "sd": 1.5888218580782548e-14,
+              "n": 5
+            },
+            "bill": {
+              "mean": 41.06555900907554,
+              "sd": 0,
+              "n": 5
+            },
+            "carbon": {
+              "mean": 116.06573012921521,
+              "sd": 1.5888218580782548e-14,
+              "n": 5
+            },
+            "unserved": {
+              "mean": 14.039635403878933,
+              "sd": 0,
+              "n": 5
+            },
+            "shortfall": {
+              "mean": 0.04071741065793652,
+              "sd": 0,
+              "n": 5
+            },
+            "readyDepartures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            },
+            "departures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "stronger-ev-deadline",
+      "config": {
+        "deadlinePenalty": 4
+      },
+      "runs": [
+        {
+          "id": "q-42-61fb55d3-f2a1-409a-b1ca-7f9ea13008dd",
+          "seed": 42,
+          "episodes": 6000,
+          "seconds": 4.233861962000002,
+          "config": {
+            "observation": "hourly",
+            "dt": 0.25,
+            "steps": 672,
+            "capacity": 10,
+            "batteryPower": 3,
+            "efficiency": 0.95,
+            "gridLimit": 5,
+            "evCapacity": 40,
+            "evTarget": 32,
+            "evEfficiency": 0.92,
+            "evRates": [
+              0,
+              1.8,
+              3.6
+            ],
+            "wear": 0.015,
+            "carbonWeight": 0.05,
+            "unservedPenalty": 4,
+            "deadlinePenalty": 4,
+            "initialSoc": 5,
+            "initialEvSoc": 24
+          },
+          "evaluations": {
+            "balanced": {
+              "scenarios": 10,
+              "profile": "balanced",
+              "learned": {
+                "objective": 39.16516189732461,
+                "bill": 30.537369448727894,
+                "carbon": 106.95546313734798,
+                "unserved": 0,
+                "shortfall": 0.04787194363789844,
+                "gridEnergy": 229.34320439648602,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "rule": {
+                "objective": 37.540625212233024,
+                "bill": 28.52557983260199,
+                "carbon": 112.5717812754504,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 241.91380743225454,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 62.21001439266476,
+                "bill": 45.214915842150525,
+                "carbon": 123.55762441115613,
+                "unserved": 2.513644200892886,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 237.8884118231086,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            },
+            "cloudy": {
+              "scenarios": 10,
+              "profile": "cloudy",
+              "learned": {
+                "objective": 45.73758760755918,
+                "bill": 36.32793357525622,
+                "carbon": 117.60151964487139,
+                "unserved": 0,
+                "shortfall": 0.045592798448711135,
+                "gridEnergy": 260.16322410653993,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "rule": {
+                "objective": 41.47947503650901,
+                "bill": 32.05409249722124,
+                "carbon": 120.77852446858516,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 259.87979395746225,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 66.12776785782101,
+                "bill": 48.72060265977218,
+                "carbon": 131.7989573618484,
+                "unserved": 2.5136442008928865,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 255.72758808721852,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            },
+            "outage": {
+              "scenarios": 10,
+              "profile": "outage",
+              "learned": {
+                "objective": 75.14465071929892,
+                "bill": 30.812437543388597,
+                "carbon": 104.3921096247691,
+                "unserved": 8.986451645749337,
+                "shortfall": 0.05104291765484063,
+                "gridEnergy": 221.45285639359057,
+                "departures": 7.000000000000001,
+                "readyDepartures": 6.9
+              },
+              "rule": {
+                "objective": 37.540625212233024,
+                "bill": 28.52557983260199,
+                "carbon": 112.5717812754504,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 241.91380743225454,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 103.79002765743691,
+                "bill": 41.06555900907554,
+                "carbon": 116.06573012921523,
+                "unserved": 14.039635403878933,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 226.36242062012258,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            }
+          },
+          "severity": {
+            "1": {
+              "objective": 55.33592229069679,
+              "bill": 30.927773424883725,
+              "carbon": 106.25672520921161,
+              "unserved": 3.9109435711192826,
+              "shortfall": 0.14919089295136523,
+              "gridEnergy": 226.14617553146374,
+              "departures": 7.000000000000001,
+              "readyDepartures": 6.699999999999999
+            },
+            "3": {
+              "objective": 75.14465071929892,
+              "bill": 30.812437543388597,
+              "carbon": 104.3921096247691,
+              "unserved": 8.986451645749337,
+              "shortfall": 0.05104291765484063,
+              "gridEnergy": 221.45285639359057,
+              "departures": 7.000000000000001,
+              "readyDepartures": 6.9
+            },
+            "6": {
+              "objective": 118.14011205246953,
+              "bill": 26.109480060895827,
+              "carbon": 96.8526136633778,
+              "unserved": 21.02700652688364,
+              "shortfall": 0.06312472615478378,
+              "gridEnergy": 209.72639935412704,
+              "departures": 7.000000000000001,
+              "readyDepartures": 7.000000000000001
+            }
+          }
+        },
+        {
+          "id": "q-43-715cf139-c9de-45c3-a3ad-54890170ebba",
+          "seed": 43,
+          "episodes": 6000,
+          "seconds": 4.397740554000004,
+          "config": {
+            "observation": "hourly",
+            "dt": 0.25,
+            "steps": 672,
+            "capacity": 10,
+            "batteryPower": 3,
+            "efficiency": 0.95,
+            "gridLimit": 5,
+            "evCapacity": 40,
+            "evTarget": 32,
+            "evEfficiency": 0.92,
+            "evRates": [
+              0,
+              1.8,
+              3.6
+            ],
+            "wear": 0.015,
+            "carbonWeight": 0.05,
+            "unservedPenalty": 4,
+            "deadlinePenalty": 4,
+            "initialSoc": 5,
+            "initialEvSoc": 24
+          },
+          "evaluations": {
+            "balanced": {
+              "scenarios": 10,
+              "profile": "balanced",
+              "learned": {
+                "objective": 65.04049024342677,
+                "bill": 38.07690499607049,
+                "carbon": 105.81429110807154,
+                "unserved": 0,
+                "shortfall": 9.365446515136064,
+                "gridEnergy": 217.51827794394143,
+                "departures": 7.000000000000001,
+                "readyDepartures": 3.0000000000000004
+              },
+              "rule": {
+                "objective": 37.540625212233024,
+                "bill": 28.52557983260199,
+                "carbon": 112.5717812754504,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 241.91380743225454,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 62.21001439266476,
+                "bill": 45.214915842150525,
+                "carbon": 123.55762441115613,
+                "unserved": 2.513644200892886,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 237.8884118231086,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            },
+            "cloudy": {
+              "scenarios": 10,
+              "profile": "cloudy",
+              "learned": {
+                "objective": 75.12477447308461,
+                "bill": 46.3685178682723,
+                "carbon": 122.5228264652176,
+                "unserved": 0,
+                "shortfall": 9.784449118864323,
+                "gridEnergy": 257.56279178000153,
+                "departures": 7.000000000000001,
+                "readyDepartures": 2.8000000000000003
+              },
+              "rule": {
+                "objective": 41.47947503650901,
+                "bill": 32.05409249722124,
+                "carbon": 120.77852446858516,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 259.87979395746225,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 66.12776785782101,
+                "bill": 48.72060265977218,
+                "carbon": 131.7989573618484,
+                "unserved": 2.5136442008928865,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 255.72758808721852,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            },
+            "outage": {
+              "scenarios": 10,
+              "profile": "outage",
+              "learned": {
+                "objective": 102.63137921705189,
+                "bill": 33.214941104706796,
+                "carbon": 97.5764566248636,
+                "unserved": 8.986451645749337,
+                "shortfall": 12.744481436952361,
+                "gridEnergy": 205.56128524844294,
+                "departures": 7.000000000000001,
+                "readyDepartures": 1.8
+              },
+              "rule": {
+                "objective": 37.540625212233024,
+                "bill": 28.52557983260199,
+                "carbon": 112.5717812754504,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 241.91380743225454,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 103.79002765743691,
+                "bill": 41.06555900907554,
+                "carbon": 116.06573012921523,
+                "unserved": 14.039635403878933,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 226.36242062012258,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            }
+          },
+          "severity": {
+            "1": {
+              "objective": 81.80629724813903,
+              "bill": 35.870393262596494,
+              "carbon": 101.95646994822101,
+              "unserved": 3.9109435711192826,
+              "shortfall": 11.09330585796097,
+              "gridEnergy": 211.83996791651794,
+              "departures": 7.000000000000001,
+              "readyDepartures": 2.4
+            },
+            "3": {
+              "objective": 102.63137921705189,
+              "bill": 33.214941104706796,
+              "carbon": 97.5764566248636,
+              "unserved": 8.986451645749337,
+              "shortfall": 12.744481436952361,
+              "gridEnergy": 205.56128524844294,
+              "departures": 7.000000000000001,
+              "readyDepartures": 1.8
+            },
+            "6": {
+              "objective": 135.0568255569591,
+              "bill": 28.930670801175246,
+              "carbon": 93.84503590154102,
+              "unserved": 21.02700652688364,
+              "shortfall": 7.227531729632882,
+              "gridEnergy": 200.94894422871482,
+              "departures": 7.000000000000001,
+              "readyDepartures": 3.8
+            }
+          }
+        },
+        {
+          "id": "q-44-35e66c23-ca9f-43de-8b6e-b17fed05da90",
+          "seed": 44,
+          "episodes": 6000,
+          "seconds": 4.522920264000001,
+          "config": {
+            "observation": "hourly",
+            "dt": 0.25,
+            "steps": 672,
+            "capacity": 10,
+            "batteryPower": 3,
+            "efficiency": 0.95,
+            "gridLimit": 5,
+            "evCapacity": 40,
+            "evTarget": 32,
+            "evEfficiency": 0.92,
+            "evRates": [
+              0,
+              1.8,
+              3.6
+            ],
+            "wear": 0.015,
+            "carbonWeight": 0.05,
+            "unservedPenalty": 4,
+            "deadlinePenalty": 4,
+            "initialSoc": 5,
+            "initialEvSoc": 24
+          },
+          "evaluations": {
+            "balanced": {
+              "scenarios": 10,
+              "profile": "balanced",
+              "learned": {
+                "objective": 48.654964737933675,
+                "bill": 35.11777458749406,
+                "carbon": 109.53077774281009,
+                "unserved": 0,
+                "shortfall": 2.4871069733617768,
+                "gridEnergy": 225.86177906432195,
+                "departures": 7.000000000000001,
+                "readyDepartures": 6.3
+              },
+              "rule": {
+                "objective": 37.540625212233024,
+                "bill": 28.52557983260199,
+                "carbon": 112.5717812754504,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 241.91380743225454,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 62.21001439266476,
+                "bill": 45.214915842150525,
+                "carbon": 123.55762441115613,
+                "unserved": 2.513644200892886,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 237.8884118231086,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            },
+            "cloudy": {
+              "scenarios": 10,
+              "profile": "cloudy",
+              "learned": {
+                "objective": 56.806348406341165,
+                "bill": 41.52918635932624,
+                "carbon": 121.73638781939371,
+                "unserved": 0,
+                "shortfall": 2.9373328760359385,
+                "gridEnergy": 258.11518831453225,
+                "departures": 7.000000000000001,
+                "readyDepartures": 6.2
+              },
+              "rule": {
+                "objective": 41.47947503650901,
+                "bill": 32.05409249722124,
+                "carbon": 120.77852446858516,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 259.87979395746225,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 66.12776785782101,
+                "bill": 48.72060265977218,
+                "carbon": 131.7989573618484,
+                "unserved": 2.5136442008928865,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 255.72758808721852,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            },
+            "outage": {
+              "scenarios": 10,
+              "profile": "outage",
+              "learned": {
+                "objective": 85.96736516124555,
+                "bill": 31.913832671627944,
+                "carbon": 103.33898569784732,
+                "unserved": 8.986451645749337,
+                "shortfall": 4.838814118415338,
+                "gridEnergy": 215.78089505237062,
+                "departures": 7.000000000000001,
+                "readyDepartures": 5.8999999999999995
+              },
+              "rule": {
+                "objective": 37.540625212233024,
+                "bill": 28.52557983260199,
+                "carbon": 112.5717812754504,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 241.91380743225454,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 103.79002765743691,
+                "bill": 41.06555900907554,
+                "carbon": 116.06573012921523,
+                "unserved": 14.039635403878933,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 226.36242062012258,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            }
+          },
+          "severity": {
+            "1": {
+              "objective": 62.720020117520654,
+              "bill": 33.66134241445039,
+              "carbon": 106.9227865382452,
+              "unserved": 3.9109435711192826,
+              "shortfall": 2.4871069733617768,
+              "gridEnergy": 221.86866349979277,
+              "departures": 7.000000000000001,
+              "readyDepartures": 6.3
+            },
+            "3": {
+              "objective": 85.96736516124555,
+              "bill": 31.913832671627944,
+              "carbon": 103.33898569784732,
+              "unserved": 8.986451645749337,
+              "shortfall": 4.838814118415338,
+              "gridEnergy": 215.78089505237062,
+              "departures": 7.000000000000001,
+              "readyDepartures": 5.8999999999999995
+            },
+            "6": {
+              "objective": 149.3284483360674,
+              "bill": 28.246422378065397,
+              "carbon": 95.49994314582553,
+              "unserved": 21.02700652688364,
+              "shortfall": 14.233245533633019,
+              "gridEnergy": 201.39292162147024,
+              "departures": 7.000000000000001,
+              "readyDepartures": 3.3999999999999995
+            }
+          }
+        },
+        {
+          "id": "q-45-7cf66562-0e26-4bdf-a6eb-e7fdf0a3f5f9",
+          "seed": 45,
+          "episodes": 6000,
+          "seconds": 4.240507426999997,
+          "config": {
+            "observation": "hourly",
+            "dt": 0.25,
+            "steps": 672,
+            "capacity": 10,
+            "batteryPower": 3,
+            "efficiency": 0.95,
+            "gridLimit": 5,
+            "evCapacity": 40,
+            "evTarget": 32,
+            "evEfficiency": 0.92,
+            "evRates": [
+              0,
+              1.8,
+              3.6
+            ],
+            "wear": 0.015,
+            "carbonWeight": 0.05,
+            "unservedPenalty": 4,
+            "deadlinePenalty": 4,
+            "initialSoc": 5,
+            "initialEvSoc": 24
+          },
+          "evaluations": {
+            "balanced": {
+              "scenarios": 10,
+              "profile": "balanced",
+              "learned": {
+                "objective": 44.19809517063034,
+                "bill": 35.42995218024263,
+                "carbon": 106.99639973063981,
+                "unserved": 0,
+                "shortfall": 0.02555974100809557,
+                "gridEnergy": 222.42149643767004,
+                "departures": 7.000000000000001,
+                "readyDepartures": 6.9
+              },
+              "rule": {
+                "objective": 37.540625212233024,
+                "bill": 28.52557983260199,
+                "carbon": 112.5717812754504,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 241.91380743225454,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 62.21001439266476,
+                "bill": 45.214915842150525,
+                "carbon": 123.55762441115613,
+                "unserved": 2.513644200892886,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 237.8884118231086,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            },
+            "cloudy": {
+              "scenarios": 10,
+              "profile": "cloudy",
+              "learned": {
+                "objective": 51.248238269890756,
+                "bill": 41.53710922610093,
+                "carbon": 119.58980336615834,
+                "unserved": 0,
+                "shortfall": 0.02555974100809557,
+                "gridEnergy": 260.36251663628514,
+                "departures": 7.000000000000001,
+                "readyDepartures": 6.9
+              },
+              "rule": {
+                "objective": 41.47947503650901,
+                "bill": 32.05409249722124,
+                "carbon": 120.77852446858516,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 259.87979395746225,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 66.12776785782101,
+                "bill": 48.72060265977218,
+                "carbon": 131.7989573618484,
+                "unserved": 2.5136442008928865,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 255.72758808721852,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            },
+            "outage": {
+              "scenarios": 10,
+              "profile": "outage",
+              "learned": {
+                "objective": 76.70944952780322,
+                "bill": 32.28829872582948,
+                "carbon": 101.3048811934749,
+                "unserved": 8.986451645749337,
+                "shortfall": 0.02555974100809557,
+                "gridEnergy": 213.58493197070567,
+                "departures": 7.000000000000001,
+                "readyDepartures": 6.9
+              },
+              "rule": {
+                "objective": 37.540625212233024,
+                "bill": 28.52557983260199,
+                "carbon": 112.5717812754504,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 241.91380743225454,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 103.79002765743691,
+                "bill": 41.06555900907554,
+                "carbon": 116.06573012921523,
+                "unserved": 14.039635403878933,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 226.36242062012258,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            }
+          },
+          "severity": {
+            "1": {
+              "objective": 58.78884542898275,
+              "bill": 34.4889653283334,
+              "carbon": 104.91255166826899,
+              "unserved": 3.9109435711192826,
+              "shortfall": 0.02555974100809557,
+              "gridEnergy": 218.80457216624575,
+              "departures": 7.000000000000001,
+              "readyDepartures": 6.9
+            },
+            "3": {
+              "objective": 76.70944952780322,
+              "bill": 32.28829872582948,
+              "carbon": 101.3048811934749,
+              "unserved": 8.986451645749337,
+              "shortfall": 0.02555974100809557,
+              "gridEnergy": 213.58493197070567,
+              "departures": 7.000000000000001,
+              "readyDepartures": 6.9
+            },
+            "6": {
+              "objective": 120.6974446660678,
+              "bill": 28.52782279064434,
+              "carbon": 94.35687017787491,
+              "unserved": 21.02700652688364,
+              "shortfall": 0.02555974100809557,
+              "gridEnergy": 201.65031587648298,
+              "departures": 7.000000000000001,
+              "readyDepartures": 6.9
+            }
+          }
+        },
+        {
+          "id": "q-46-17ceb0f4-906e-4e2a-beed-d5b33f8f9571",
+          "seed": 46,
+          "episodes": 6000,
+          "seconds": 4.271022979000001,
+          "config": {
+            "observation": "hourly",
+            "dt": 0.25,
+            "steps": 672,
+            "capacity": 10,
+            "batteryPower": 3,
+            "efficiency": 0.95,
+            "gridLimit": 5,
+            "evCapacity": 40,
+            "evTarget": 32,
+            "evEfficiency": 0.92,
+            "evRates": [
+              0,
+              1.8,
+              3.6
+            ],
+            "wear": 0.015,
+            "carbonWeight": 0.05,
+            "unservedPenalty": 4,
+            "deadlinePenalty": 4,
+            "initialSoc": 5,
+            "initialEvSoc": 24
+          },
+          "evaluations": {
+            "balanced": {
+              "scenarios": 10,
+              "profile": "balanced",
+              "learned": {
+                "objective": 39.8320941678746,
+                "bill": 31.0522405909674,
+                "carbon": 99.17930411032538,
+                "unserved": 0,
+                "shortfall": 0.005735233037917809,
+                "gridEnergy": 216.2898362416881,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "rule": {
+                "objective": 37.540625212233024,
+                "bill": 28.52557983260199,
+                "carbon": 112.5717812754504,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 241.91380743225454,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 62.21001439266476,
+                "bill": 45.214915842150525,
+                "carbon": 123.55762441115613,
+                "unserved": 2.513644200892886,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 237.8884118231086,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            },
+            "cloudy": {
+              "scenarios": 10,
+              "profile": "cloudy",
+              "learned": {
+                "objective": 50.077161681722444,
+                "bill": 40.529106611135184,
+                "carbon": 116.02506147412217,
+                "unserved": 0,
+                "shortfall": 0.01045137126128921,
+                "gridEnergy": 258.07017856498146,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "rule": {
+                "objective": 41.47947503650901,
+                "bill": 32.05409249722124,
+                "carbon": 120.77852446858516,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 259.87979395746225,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 66.12776785782101,
+                "bill": 48.72060265977218,
+                "carbon": 131.7989573618484,
+                "unserved": 2.5136442008928865,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 255.72758808721852,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            },
+            "outage": {
+              "scenarios": 10,
+              "profile": "outage",
+              "learned": {
+                "objective": 76.53718350887428,
+                "bill": 31.804579537232783,
+                "carbon": 96.10086679921032,
+                "unserved": 8.986451645749337,
+                "shortfall": 0.005735233037917809,
+                "gridEnergy": 207.9359740543098,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "rule": {
+                "objective": 37.540625212233024,
+                "bill": 28.52557983260199,
+                "carbon": 112.5717812754504,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 241.91380743225454,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 103.79002765743691,
+                "bill": 41.06555900907554,
+                "carbon": 116.06573012921523,
+                "unserved": 14.039635403878933,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 226.36242062012258,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            }
+          },
+          "severity": {
+            "1": {
+              "objective": 59.38328313245056,
+              "bill": 34.940738226383786,
+              "carbon": 100.86844797118306,
+              "unserved": 3.9109435711192826,
+              "shortfall": 0.005735233037917809,
+              "gridEnergy": 213.56159950444774,
+              "departures": 7.000000000000001,
+              "readyDepartures": 7.000000000000001
+            },
+            "3": {
+              "objective": 76.53718350887428,
+              "bill": 31.804579537232783,
+              "carbon": 96.10086679921032,
+              "unserved": 8.986451645749337,
+              "shortfall": 0.005735233037917809,
+              "gridEnergy": 207.9359740543098,
+              "departures": 7.000000000000001,
+              "readyDepartures": 7.000000000000001
+            },
+            "6": {
+              "objective": 119.41328983290158,
+              "bill": 27.13869139837177,
+              "carbon": 88.29168162317009,
+              "unserved": 21.02700652688364,
+              "shortfall": 0.005735233037917809,
+              "gridEnergy": 195.13882810922962,
+              "departures": 7.000000000000001,
+              "readyDepartures": 7.000000000000001
+            }
+          }
+        }
+      ],
+      "summary": {
+        "balanced": {
+          "learned": {
+            "objective": {
+              "mean": 47.378161243437994,
+              "sd": 10.584155607120769,
+              "n": 5
+            },
+            "bill": {
+              "mean": 34.042848360700496,
+              "sd": 3.1853278312946953,
+              "n": 5
+            },
+            "carbon": {
+              "mean": 105.69524716583894,
+              "sd": 3.8879339777538884,
+              "n": 5
+            },
+            "unserved": {
+              "mean": 0,
+              "sd": 0,
+              "n": 5
+            },
+            "shortfall": {
+              "mean": 2.386344081236351,
+              "sd": 4.044350289935526,
+              "n": 5
+            },
+            "readyDepartures": {
+              "mean": 6.040000000000001,
+              "sd": 1.7242389625571046,
+              "n": 5
+            },
+            "departures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            }
+          },
+          "rule": {
+            "objective": {
+              "mean": 37.540625212233024,
+              "sd": 0,
+              "n": 5
+            },
+            "bill": {
+              "mean": 28.525579832601988,
+              "sd": 3.972054645195637e-15,
+              "n": 5
+            },
+            "carbon": {
+              "mean": 112.57178127545039,
+              "sd": 1.5888218580782548e-14,
+              "n": 5
+            },
+            "unserved": {
+              "mean": 0,
+              "sd": 0,
+              "n": 5
+            },
+            "shortfall": {
+              "mean": 0.04071741065793652,
+              "sd": 0,
+              "n": 5
+            },
+            "readyDepartures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            },
+            "departures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            }
+          },
+          "noBattery": {
+            "objective": {
+              "mean": 62.21001439266477,
+              "sd": 7.944109290391274e-15,
+              "n": 5
+            },
+            "bill": {
+              "mean": 45.214915842150525,
+              "sd": 0,
+              "n": 5
+            },
+            "carbon": {
+              "mean": 123.55762441115613,
+              "sd": 0,
+              "n": 5
+            },
+            "unserved": {
+              "mean": 2.513644200892886,
+              "sd": 0,
+              "n": 5
+            },
+            "shortfall": {
+              "mean": 0.04071741065793652,
+              "sd": 0,
+              "n": 5
+            },
+            "readyDepartures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            },
+            "departures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            }
+          }
+        },
+        "cloudy": {
+          "learned": {
+            "objective": {
+              "mean": 55.798822087719635,
+              "sd": 11.501969342611737,
+              "n": 5
+            },
+            "bill": {
+              "mean": 41.25837072801817,
+              "sd": 3.5744117250615584,
+              "n": 5
+            },
+            "carbon": {
+              "mean": 119.49511975395265,
+              "sd": 2.7306721377509664,
+              "n": 5
+            },
+            "unserved": {
+              "mean": 0,
+              "sd": 0,
+              "n": 5
+            },
+            "shortfall": {
+              "mean": 2.5606771811236717,
+              "sd": 4.230273989041403,
+              "n": 5
+            },
+            "readyDepartures": {
+              "mean": 5.9799999999999995,
+              "sd": 1.8088670487352023,
+              "n": 5
+            },
+            "departures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            }
+          },
+          "rule": {
+            "objective": {
+              "mean": 41.47947503650901,
+              "sd": 0,
+              "n": 5
+            },
+            "bill": {
+              "mean": 32.05409249722124,
+              "sd": 0,
+              "n": 5
+            },
+            "carbon": {
+              "mean": 120.77852446858518,
+              "sd": 1.5888218580782548e-14,
+              "n": 5
+            },
+            "unserved": {
+              "mean": 0,
+              "sd": 0,
+              "n": 5
+            },
+            "shortfall": {
+              "mean": 0.04071741065793652,
+              "sd": 0,
+              "n": 5
+            },
+            "readyDepartures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            },
+            "departures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            }
+          },
+          "noBattery": {
+            "objective": {
+              "mean": 66.12776785782101,
+              "sd": 0,
+              "n": 5
+            },
+            "bill": {
+              "mean": 48.72060265977218,
+              "sd": 0,
+              "n": 5
+            },
+            "carbon": {
+              "mean": 131.7989573618484,
+              "sd": 0,
+              "n": 5
+            },
+            "unserved": {
+              "mean": 2.5136442008928865,
+              "sd": 0,
+              "n": 5
+            },
+            "shortfall": {
+              "mean": 0.04071741065793652,
+              "sd": 0,
+              "n": 5
+            },
+            "readyDepartures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            },
+            "departures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            }
+          }
+        },
+        "outage": {
+          "learned": {
+            "objective": {
+              "mean": 83.39800562685477,
+              "sd": 11.58069296428179,
+              "n": 5
+            },
+            "bill": {
+              "mean": 32.006817916557125,
+              "sd": 0.8681710916331543,
+              "n": 5
+            },
+            "carbon": {
+              "mean": 100.54265998803305,
+              "sd": 3.5967544491913337,
+              "n": 5
+            },
+            "unserved": {
+              "mean": 8.986451645749337,
+              "sd": 0,
+              "n": 5
+            },
+            "shortfall": {
+              "mean": 3.5331266894137103,
+              "sd": 5.5548244734838965,
+              "n": 5
+            },
+            "readyDepartures": {
+              "mean": 5.7,
+              "sd": 2.2259829289552067,
+              "n": 5
+            },
+            "departures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            }
+          },
+          "rule": {
+            "objective": {
+              "mean": 37.540625212233024,
+              "sd": 0,
+              "n": 5
+            },
+            "bill": {
+              "mean": 28.525579832601988,
+              "sd": 3.972054645195637e-15,
+              "n": 5
+            },
+            "carbon": {
+              "mean": 112.57178127545039,
+              "sd": 1.5888218580782548e-14,
+              "n": 5
+            },
+            "unserved": {
+              "mean": 0,
+              "sd": 0,
+              "n": 5
+            },
+            "shortfall": {
+              "mean": 0.04071741065793652,
+              "sd": 0,
+              "n": 5
+            },
+            "readyDepartures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            },
+            "departures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            }
+          },
+          "noBattery": {
+            "objective": {
+              "mean": 103.79002765743692,
+              "sd": 1.5888218580782548e-14,
+              "n": 5
+            },
+            "bill": {
+              "mean": 41.06555900907554,
+              "sd": 0,
+              "n": 5
+            },
+            "carbon": {
+              "mean": 116.06573012921521,
+              "sd": 1.5888218580782548e-14,
+              "n": 5
+            },
+            "unserved": {
+              "mean": 14.039635403878933,
+              "sd": 0,
+              "n": 5
+            },
+            "shortfall": {
+              "mean": 0.04071741065793652,
+              "sd": 0,
+              "n": 5
+            },
+            "readyDepartures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            },
+            "departures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "quarter-hour-observation",
+      "config": {
+        "observation": "quarter-hour"
+      },
+      "runs": [
+        {
+          "id": "q-42-0664b60c-d326-475a-8e08-263ff538fa13",
+          "seed": 42,
+          "episodes": 6000,
+          "seconds": 4.360080246999998,
+          "config": {
+            "observation": "quarter-hour",
+            "dt": 0.25,
+            "steps": 672,
+            "capacity": 10,
+            "batteryPower": 3,
+            "efficiency": 0.95,
+            "gridLimit": 5,
+            "evCapacity": 40,
+            "evTarget": 32,
+            "evEfficiency": 0.92,
+            "evRates": [
+              0,
+              1.8,
+              3.6
+            ],
+            "wear": 0.015,
+            "carbonWeight": 0.05,
+            "unservedPenalty": 4,
+            "deadlinePenalty": 2,
+            "initialSoc": 5,
+            "initialEvSoc": 24
+          },
+          "evaluations": {
+            "balanced": {
+              "scenarios": 10,
+              "profile": "balanced",
+              "learned": {
+                "objective": 68.45565016238513,
+                "bill": 44.57760646362635,
+                "carbon": 121.3925244605772,
+                "unserved": 1.5227278529516735,
+                "shortfall": 4.6696157783760714,
+                "gridEnergy": 235.40251290305554,
+                "departures": 7.000000000000001,
+                "readyDepartures": 2.9999999999999996
+              },
+              "rule": {
+                "objective": 37.540625212233024,
+                "bill": 28.52557983260199,
+                "carbon": 112.5717812754504,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 241.91380743225454,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 62.21001439266476,
+                "bill": 45.214915842150525,
+                "carbon": 123.55762441115613,
+                "unserved": 2.513644200892886,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 237.8884118231086,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            },
+            "cloudy": {
+              "scenarios": 10,
+              "profile": "cloudy",
+              "learned": {
+                "objective": 71.75420077495623,
+                "bill": 47.75252413273486,
+                "carbon": 129.15445161743878,
+                "unserved": 2.199936421772819,
+                "shortfall": 3.1794602330467696,
+                "gridEnergy": 255.85905488378845,
+                "departures": 7.000000000000001,
+                "readyDepartures": 3.1999999999999997
+              },
+              "rule": {
+                "objective": 41.47947503650901,
+                "bill": 32.05409249722124,
+                "carbon": 120.77852446858516,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 259.87979395746225,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 66.12776785782101,
+                "bill": 48.72060265977218,
+                "carbon": 131.7989573618484,
+                "unserved": 2.5136442008928865,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 255.72758808721852,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            },
+            "outage": {
+              "scenarios": 10,
+              "profile": "outage",
+              "learned": {
+                "objective": 106.4616537788463,
+                "bill": 40.58920848955701,
+                "carbon": 114.3875345889593,
+                "unserved": 11.797053629838244,
+                "shortfall": 5.291915726902315,
+                "gridEnergy": 224.69194682718765,
+                "departures": 7.000000000000001,
+                "readyDepartures": 2.9999999999999996
+              },
+              "rule": {
+                "objective": 37.540625212233024,
+                "bill": 28.52557983260199,
+                "carbon": 112.5717812754504,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 241.91380743225454,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 103.79002765743691,
+                "bill": 41.06555900907554,
+                "carbon": 116.06573012921523,
+                "unserved": 14.039635403878933,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 226.36242062012258,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            }
+          },
+          "severity": {
+            "1": {
+              "objective": 77.86221291967686,
+              "bill": 43.68237694217295,
+              "carbon": 119.75216537770086,
+              "unserved": 3.9109435711192826,
+              "shortfall": 5.073497178674196,
+              "gridEnergy": 232.7156919568096,
+              "departures": 7.000000000000001,
+              "readyDepartures": 2.9
+            },
+            "3": {
+              "objective": 106.4616537788463,
+              "bill": 40.58920848955701,
+              "carbon": 114.3875345889593,
+              "unserved": 11.797053629838244,
+              "shortfall": 5.291915726902315,
+              "gridEnergy": 224.69194682718765,
+              "departures": 7.000000000000001,
+              "readyDepartures": 2.9999999999999996
+            },
+            "6": {
+              "objective": 150.17645382866883,
+              "bill": 36.60181597072994,
+              "carbon": 106.97255986938137,
+              "unserved": 23.837608510972547,
+              "shortfall": 5.250515726902314,
+              "gridEnergy": 212.72665023350882,
+              "departures": 7.000000000000001,
+              "readyDepartures": 2.9999999999999996
+            }
+          }
+        },
+        {
+          "id": "q-43-05a45b52-8d0e-4dae-8b88-2e6d40604e16",
+          "seed": 43,
+          "episodes": 6000,
+          "seconds": 4.325368023999996,
+          "config": {
+            "observation": "quarter-hour",
+            "dt": 0.25,
+            "steps": 672,
+            "capacity": 10,
+            "batteryPower": 3,
+            "efficiency": 0.95,
+            "gridLimit": 5,
+            "evCapacity": 40,
+            "evTarget": 32,
+            "evEfficiency": 0.92,
+            "evRates": [
+              0,
+              1.8,
+              3.6
+            ],
+            "wear": 0.015,
+            "carbonWeight": 0.05,
+            "unservedPenalty": 4,
+            "deadlinePenalty": 2,
+            "initialSoc": 5,
+            "initialEvSoc": 24
+          },
+          "evaluations": {
+            "balanced": {
+              "scenarios": 10,
+              "profile": "balanced",
+              "learned": {
+                "objective": 51.47925561063404,
+                "bill": 36.92110607136273,
+                "carbon": 113.17371638199735,
+                "unserved": 0.06091618642676622,
+                "shortfall": 2.839595021139367,
+                "gridEnergy": 232.34680047618525,
+                "departures": 7.000000000000001,
+                "readyDepartures": 3.7999999999999994
+              },
+              "rule": {
+                "objective": 37.540625212233024,
+                "bill": 28.52557983260199,
+                "carbon": 112.5717812754504,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 241.91380743225454,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 62.21001439266476,
+                "bill": 45.214915842150525,
+                "carbon": 123.55762441115613,
+                "unserved": 2.513644200892886,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 237.8884118231086,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            },
+            "cloudy": {
+              "scenarios": 10,
+              "profile": "cloudy",
+              "learned": {
+                "objective": 59.13761189063385,
+                "bill": 42.69656719231184,
+                "carbon": 125.08720166972044,
+                "unserved": 0.118839333280921,
+                "shortfall": 3.273275025317447,
+                "gridEnergy": 260.96648473638066,
+                "departures": 7.000000000000001,
+                "readyDepartures": 3.4000000000000004
+              },
+              "rule": {
+                "objective": 41.47947503650901,
+                "bill": 32.05409249722124,
+                "carbon": 120.77852446858516,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 259.87979395746225,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 66.12776785782101,
+                "bill": 48.72060265977218,
+                "carbon": 131.7989573618484,
+                "unserved": 2.5136442008928865,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 255.72758808721852,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            },
+            "outage": {
+              "scenarios": 10,
+              "profile": "outage",
+              "learned": {
+                "objective": 85.43456951631725,
+                "bill": 34.39767592013793,
+                "carbon": 108.02664221965776,
+                "unserved": 9.172425039820087,
+                "shortfall": 3.0252299759358676,
+                "gridEnergy": 223.14970912842742,
+                "departures": 7.000000000000001,
+                "readyDepartures": 3.6999999999999997
+              },
+              "rule": {
+                "objective": 37.540625212233024,
+                "bill": 28.52557983260199,
+                "carbon": 112.5717812754504,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 241.91380743225454,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 103.79002765743691,
+                "bill": 41.06555900907554,
+                "carbon": 116.06573012921523,
+                "unserved": 14.039635403878933,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 226.36242062012258,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            }
+          },
+          "severity": {
+            "1": {
+              "objective": 65.89026780938498,
+              "bill": 36.44072898661313,
+              "carbon": 111.47683624588889,
+              "unserved": 3.9109435711192826,
+              "shortfall": 2.6392620535644182,
+              "gridEnergy": 228.43217742149903,
+              "departures": 7.000000000000001,
+              "readyDepartures": 4.1
+            },
+            "3": {
+              "objective": 85.43456951631725,
+              "bill": 34.39767592013793,
+              "carbon": 108.02664221965776,
+              "unserved": 9.172425039820087,
+              "shortfall": 3.0252299759358676,
+              "gridEnergy": 223.14970912842742,
+              "departures": 7.000000000000001,
+              "readyDepartures": 3.6999999999999997
+            },
+            "6": {
+              "objective": 127.63768401324192,
+              "bill": 31.299861230073756,
+              "carbon": 100.8599240359147,
+              "unserved": 21.08860572900361,
+              "shortfall": 2.0470878314882874,
+              "gridEnergy": 211.22568214834328,
+              "departures": 7.000000000000001,
+              "readyDepartures": 4.6
+            }
+          }
+        },
+        {
+          "id": "q-44-32ca1bfc-8803-43ff-b299-3bee3beaab87",
+          "seed": 44,
+          "episodes": 6000,
+          "seconds": 4.613356396000003,
+          "config": {
+            "observation": "quarter-hour",
+            "dt": 0.25,
+            "steps": 672,
+            "capacity": 10,
+            "batteryPower": 3,
+            "efficiency": 0.95,
+            "gridLimit": 5,
+            "evCapacity": 40,
+            "evTarget": 32,
+            "evEfficiency": 0.92,
+            "evRates": [
+              0,
+              1.8,
+              3.6
+            ],
+            "wear": 0.015,
+            "carbonWeight": 0.05,
+            "unservedPenalty": 4,
+            "deadlinePenalty": 2,
+            "initialSoc": 5,
+            "initialEvSoc": 24
+          },
+          "evaluations": {
+            "balanced": {
+              "scenarios": 10,
+              "profile": "balanced",
+              "learned": {
+                "objective": 92.33322124364008,
+                "bill": 36.34931837597234,
+                "carbon": 110.84162775493508,
+                "unserved": 0.0022531063813261533,
+                "shortfall": 23.291118441848592,
+                "gridEnergy": 227.61808432205407,
+                "departures": 7.000000000000001,
+                "readyDepartures": 2.1
+              },
+              "rule": {
+                "objective": 37.540625212233024,
+                "bill": 28.52557983260199,
+                "carbon": 112.5717812754504,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 241.91380743225454,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 62.21001439266476,
+                "bill": 45.214915842150525,
+                "carbon": 123.55762441115613,
+                "unserved": 2.513644200892886,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 237.8884118231086,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            },
+            "cloudy": {
+              "scenarios": 10,
+              "profile": "cloudy",
+              "learned": {
+                "objective": 97.90586508789175,
+                "bill": 42.76116016732116,
+                "carbon": 124.02299359510529,
+                "unserved": 0.2010658280284739,
+                "shortfall": 22.101804375288292,
+                "gridEnergy": 257.46635705020987,
+                "departures": 7.000000000000001,
+                "readyDepartures": 1.9000000000000001
+              },
+              "rule": {
+                "objective": 41.47947503650901,
+                "bill": 32.05409249722124,
+                "carbon": 120.77852446858516,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 259.87979395746225,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 66.12776785782101,
+                "bill": 48.72060265977218,
+                "carbon": 131.7989573618484,
+                "unserved": 2.5136442008928865,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 255.72758808721852,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            },
+            "outage": {
+              "scenarios": 10,
+              "profile": "outage",
+              "learned": {
+                "objective": 137.3265384071591,
+                "bill": 33.91853590043933,
+                "carbon": 105.04554293036315,
+                "unserved": 10.873408318452716,
+                "shortfall": 25.433723984944898,
+                "gridEnergy": 216.89702592574452,
+                "departures": 7.000000000000001,
+                "readyDepartures": 2
+              },
+              "rule": {
+                "objective": 37.540625212233024,
+                "bill": 28.52557983260199,
+                "carbon": 112.5717812754504,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 241.91380743225454,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 103.79002765743691,
+                "bill": 41.06555900907554,
+                "carbon": 116.06573012921523,
+                "unserved": 14.039635403878933,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 226.36242062012258,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            }
+          },
+          "severity": {
+            "1": {
+              "objective": 115.1949718518301,
+              "bill": 36.26811139896604,
+              "carbon": 108.95947658806969,
+              "unserved": 3.9109435711192826,
+              "shortfall": 26.945923194966113,
+              "gridEnergy": 222.34615571232476,
+              "departures": 7.000000000000001,
+              "readyDepartures": 2
+            },
+            "3": {
+              "objective": 137.3265384071591,
+              "bill": 33.91853590043933,
+              "carbon": 105.04554293036315,
+              "unserved": 10.873408318452716,
+              "shortfall": 25.433723984944898,
+              "gridEnergy": 216.89702592574452,
+              "departures": 7.000000000000001,
+              "readyDepartures": 2
+            },
+            "6": {
+              "objective": 184.95480836455448,
+              "bill": 29.094672466817673,
+              "carbon": 97.19821897257346,
+              "unserved": 22.925352204705998,
+              "shortfall": 27.77621647443694,
+              "gridEnergy": 204.26738586763932,
+              "departures": 7.000000000000001,
+              "readyDepartures": 1.5999999999999999
+            }
+          }
+        },
+        {
+          "id": "q-45-04aea530-c7c0-4bb3-8086-76a2b8996851",
+          "seed": 45,
+          "episodes": 6000,
+          "seconds": 4.822874456999998,
+          "config": {
+            "observation": "quarter-hour",
+            "dt": 0.25,
+            "steps": 672,
+            "capacity": 10,
+            "batteryPower": 3,
+            "efficiency": 0.95,
+            "gridLimit": 5,
+            "evCapacity": 40,
+            "evTarget": 32,
+            "evEfficiency": 0.92,
+            "evRates": [
+              0,
+              1.8,
+              3.6
+            ],
+            "wear": 0.015,
+            "carbonWeight": 0.05,
+            "unservedPenalty": 4,
+            "deadlinePenalty": 2,
+            "initialSoc": 5,
+            "initialEvSoc": 24
+          },
+          "evaluations": {
+            "balanced": {
+              "scenarios": 10,
+              "profile": "balanced",
+              "learned": {
+                "objective": 124.73598059686486,
+                "bill": 34.35914103045032,
+                "carbon": 107.62137442291811,
+                "unserved": 0.12177349315839818,
+                "shortfall": 39.90710778461085,
+                "gridEnergy": 223.57076583985673,
+                "departures": 7.000000000000001,
+                "readyDepartures": 1.0999999999999999
+              },
+              "rule": {
+                "objective": 37.540625212233024,
+                "bill": 28.52557983260199,
+                "carbon": 112.5717812754504,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 241.91380743225454,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 62.21001439266476,
+                "bill": 45.214915842150525,
+                "carbon": 123.55762441115613,
+                "unserved": 2.513644200892886,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 237.8884118231086,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            },
+            "cloudy": {
+              "scenarios": 10,
+              "profile": "cloudy",
+              "learned": {
+                "objective": 132.1154468526158,
+                "bill": 41.11614693217396,
+                "carbon": 121.22220241556629,
+                "unserved": 0.12177349315839821,
+                "shortfall": 39.8955165574464,
+                "gridEnergy": 253.38013255374142,
+                "departures": 7.000000000000001,
+                "readyDepartures": 0.9999999999999999
+              },
+              "rule": {
+                "objective": 41.47947503650901,
+                "bill": 32.05409249722124,
+                "carbon": 120.77852446858516,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 259.87979395746225,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 66.12776785782101,
+                "bill": 48.72060265977218,
+                "carbon": 131.7989573618484,
+                "unserved": 2.5136442008928865,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 255.72758808721852,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            },
+            "outage": {
+              "scenarios": 10,
+              "profile": "outage",
+              "learned": {
+                "objective": 140.12653327008755,
+                "bill": 33.03001256735991,
+                "carbon": 104.99274232002112,
+                "unserved": 10.137039819416536,
+                "shortfall": 28.603296546398305,
+                "gridEnergy": 219.5359022842095,
+                "departures": 7.000000000000001,
+                "readyDepartures": 1.7000000000000002
+              },
+              "rule": {
+                "objective": 37.540625212233024,
+                "bill": 28.52557983260199,
+                "carbon": 112.5717812754504,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 241.91380743225454,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 103.79002765743691,
+                "bill": 41.06555900907554,
+                "carbon": 116.06573012921523,
+                "unserved": 14.039635403878933,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 226.36242062012258,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            }
+          },
+          "severity": {
+            "1": {
+              "objective": 116.28242095626288,
+              "bill": 36.12886115113521,
+              "carbon": 110.48083036888804,
+              "unserved": 3.9109435711192826,
+              "shortfall": 27.543646193261395,
+              "gridEnergy": 227.69392670981745,
+              "departures": 7.000000000000001,
+              "readyDepartures": 2
+            },
+            "3": {
+              "objective": 140.12653327008755,
+              "bill": 33.03001256735991,
+              "carbon": 104.99274232002112,
+              "unserved": 10.137039819416536,
+              "shortfall": 28.603296546398305,
+              "gridEnergy": 219.5359022842095,
+              "departures": 7.000000000000001,
+              "readyDepartures": 1.7000000000000002
+            },
+            "6": {
+              "objective": 195.83540110383674,
+              "bill": 28.130448146886778,
+              "carbon": 95.38905889823542,
+              "unserved": 22.048529092305984,
+              "shortfall": 35.14626605718583,
+              "gridEnergy": 203.15325539790362,
+              "departures": 7.000000000000001,
+              "readyDepartures": 1.4
+            }
+          }
+        },
+        {
+          "id": "q-46-90bac1e7-5a71-4e1c-95e4-873e98597761",
+          "seed": 46,
+          "episodes": 6000,
+          "seconds": 4.498002185000005,
+          "config": {
+            "observation": "quarter-hour",
+            "dt": 0.25,
+            "steps": 672,
+            "capacity": 10,
+            "batteryPower": 3,
+            "efficiency": 0.95,
+            "gridLimit": 5,
+            "evCapacity": 40,
+            "evTarget": 32,
+            "evEfficiency": 0.92,
+            "evRates": [
+              0,
+              1.8,
+              3.6
+            ],
+            "wear": 0.015,
+            "carbonWeight": 0.05,
+            "unservedPenalty": 4,
+            "deadlinePenalty": 2,
+            "initialSoc": 5,
+            "initialEvSoc": 24
+          },
+          "evaluations": {
+            "balanced": {
+              "scenarios": 10,
+              "profile": "balanced",
+              "learned": {
+                "objective": 75.74796531997784,
+                "bill": 39.386731741327935,
+                "carbon": 112.99958490282839,
+                "unserved": 0,
+                "shortfall": 13.469743619775711,
+                "gridEnergy": 228.63975160536557,
+                "departures": 7.000000000000001,
+                "readyDepartures": 2.5
+              },
+              "rule": {
+                "objective": 37.540625212233024,
+                "bill": 28.52557983260199,
+                "carbon": 112.5717812754504,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 241.91380743225454,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 62.21001439266476,
+                "bill": 45.214915842150525,
+                "carbon": 123.55762441115613,
+                "unserved": 2.513644200892886,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 237.8884118231086,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            },
+            "cloudy": {
+              "scenarios": 10,
+              "profile": "cloudy",
+              "learned": {
+                "objective": 88.57469041662299,
+                "bill": 43.7395706131263,
+                "carbon": 123.46552849922331,
+                "unserved": 0,
+                "shortfall": 17.135186150014736,
+                "gridEnergy": 256.3863552156703,
+                "departures": 7.000000000000001,
+                "readyDepartures": 2.3999999999999995
+              },
+              "rule": {
+                "objective": 41.47947503650901,
+                "bill": 32.05409249722124,
+                "carbon": 120.77852446858516,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 259.87979395746225,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 66.12776785782101,
+                "bill": 48.72060265977218,
+                "carbon": 131.7989573618484,
+                "unserved": 2.5136442008928865,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 255.72758808721852,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            },
+            "outage": {
+              "scenarios": 10,
+              "profile": "outage",
+              "learned": {
+                "objective": 103.01221584366066,
+                "bill": 36.49946810309336,
+                "carbon": 107.6433318405532,
+                "unserved": 8.986451645749337,
+                "shortfall": 10.808924344347648,
+                "gridEnergy": 220.10532889557408,
+                "departures": 7.000000000000001,
+                "readyDepartures": 2.9000000000000004
+              },
+              "rule": {
+                "objective": 37.540625212233024,
+                "bill": 28.52557983260199,
+                "carbon": 112.5717812754504,
+                "unserved": 0,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 241.91380743225454,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              },
+              "noBattery": {
+                "objective": 103.79002765743691,
+                "bill": 41.06555900907554,
+                "carbon": 116.06573012921523,
+                "unserved": 14.039635403878933,
+                "shortfall": 0.04071741065793652,
+                "gridEnergy": 226.36242062012258,
+                "departures": 7.000000000000001,
+                "readyDepartures": 7.000000000000001
+              }
+            }
+          },
+          "severity": {
+            "1": {
+              "objective": 83.02726479738978,
+              "bill": 38.45800063409875,
+              "carbon": 111.06979044614111,
+              "unserved": 3.9109435711192826,
+              "shortfall": 9.916157812288722,
+              "gridEnergy": 225.36368447303548,
+              "departures": 7.000000000000001,
+              "readyDepartures": 2.6
+            },
+            "3": {
+              "objective": 103.01221584366066,
+              "bill": 36.49946810309336,
+              "carbon": 107.6433318405532,
+              "unserved": 8.986451645749337,
+              "shortfall": 10.808924344347648,
+              "gridEnergy": 220.10532889557408,
+              "departures": 7.000000000000001,
+              "readyDepartures": 2.9000000000000004
+            },
+            "6": {
+              "objective": 151.10705237463435,
+              "bill": 32.7664838820873,
+              "carbon": 100.2282190508875,
+              "unserved": 21.02700652688364,
+              "shortfall": 12.841365555620516,
+              "gridEnergy": 207.3550609951125,
+              "departures": 7.000000000000001,
+              "readyDepartures": 2.5
+            }
+          }
+        }
+      ],
+      "summary": {
+        "balanced": {
+          "learned": {
+            "objective": {
+              "mean": 82.55041458670038,
+              "sd": 27.774439265286137,
+              "n": 5
+            },
+            "bill": {
+              "mean": 38.318780736547936,
+              "sd": 3.9314260101163896,
+              "n": 5
+            },
+            "carbon": {
+              "mean": 113.20576558465123,
+              "sd": 5.095123424477528,
+              "n": 5
+            },
+            "unserved": {
+              "mean": 0.34153412778363285,
+              "sd": 0.6621965255578067,
+              "n": 5
+            },
+            "shortfall": {
+              "mean": 16.835436129150118,
+              "sd": 15.2413623595098,
+              "n": 5
+            },
+            "readyDepartures": {
+              "mean": 2.4999999999999996,
+              "sd": 1.007472083980494,
+              "n": 5
+            },
+            "departures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            }
+          },
+          "rule": {
+            "objective": {
+              "mean": 37.540625212233024,
+              "sd": 0,
+              "n": 5
+            },
+            "bill": {
+              "mean": 28.525579832601988,
+              "sd": 3.972054645195637e-15,
+              "n": 5
+            },
+            "carbon": {
+              "mean": 112.57178127545039,
+              "sd": 1.5888218580782548e-14,
+              "n": 5
+            },
+            "unserved": {
+              "mean": 0,
+              "sd": 0,
+              "n": 5
+            },
+            "shortfall": {
+              "mean": 0.04071741065793652,
+              "sd": 0,
+              "n": 5
+            },
+            "readyDepartures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            },
+            "departures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            }
+          },
+          "noBattery": {
+            "objective": {
+              "mean": 62.21001439266477,
+              "sd": 7.944109290391274e-15,
+              "n": 5
+            },
+            "bill": {
+              "mean": 45.214915842150525,
+              "sd": 0,
+              "n": 5
+            },
+            "carbon": {
+              "mean": 123.55762441115613,
+              "sd": 0,
+              "n": 5
+            },
+            "unserved": {
+              "mean": 2.513644200892886,
+              "sd": 0,
+              "n": 5
+            },
+            "shortfall": {
+              "mean": 0.04071741065793652,
+              "sd": 0,
+              "n": 5
+            },
+            "readyDepartures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            },
+            "departures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            }
+          }
+        },
+        "cloudy": {
+          "learned": {
+            "objective": {
+              "mean": 89.89756300454412,
+              "sd": 27.944537911170947,
+              "n": 5
+            },
+            "bill": {
+              "mean": 43.61319380753362,
+              "sd": 2.4975705901762066,
+              "n": 5
+            },
+            "carbon": {
+              "mean": 124.59047555941083,
+              "sd": 2.915879795468972,
+              "n": 5
+            },
+            "unserved": {
+              "mean": 0.5283230152481224,
+              "sd": 0.9372130568352219,
+              "n": 5
+            },
+            "shortfall": {
+              "mean": 17.117048468222727,
+              "sd": 15.244779088856221,
+              "n": 5
+            },
+            "readyDepartures": {
+              "mean": 2.38,
+              "sd": 0.9808159868191383,
+              "n": 5
+            },
+            "departures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            }
+          },
+          "rule": {
+            "objective": {
+              "mean": 41.47947503650901,
+              "sd": 0,
+              "n": 5
+            },
+            "bill": {
+              "mean": 32.05409249722124,
+              "sd": 0,
+              "n": 5
+            },
+            "carbon": {
+              "mean": 120.77852446858518,
+              "sd": 1.5888218580782548e-14,
+              "n": 5
+            },
+            "unserved": {
+              "mean": 0,
+              "sd": 0,
+              "n": 5
+            },
+            "shortfall": {
+              "mean": 0.04071741065793652,
+              "sd": 0,
+              "n": 5
+            },
+            "readyDepartures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            },
+            "departures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            }
+          },
+          "noBattery": {
+            "objective": {
+              "mean": 66.12776785782101,
+              "sd": 0,
+              "n": 5
+            },
+            "bill": {
+              "mean": 48.72060265977218,
+              "sd": 0,
+              "n": 5
+            },
+            "carbon": {
+              "mean": 131.7989573618484,
+              "sd": 0,
+              "n": 5
+            },
+            "unserved": {
+              "mean": 2.5136442008928865,
+              "sd": 0,
+              "n": 5
+            },
+            "shortfall": {
+              "mean": 0.04071741065793652,
+              "sd": 0,
+              "n": 5
+            },
+            "readyDepartures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            },
+            "departures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            }
+          }
+        },
+        "outage": {
+          "learned": {
+            "objective": {
+              "mean": 114.47230216321418,
+              "sd": 23.55392574095225,
+              "n": 5
+            },
+            "bill": {
+              "mean": 35.68698019611751,
+              "sd": 3.022464084287126,
+              "n": 5
+            },
+            "carbon": {
+              "mean": 108.01915877991091,
+              "sd": 3.830766899227346,
+              "n": 5
+            },
+            "unserved": {
+              "mean": 10.193275690655383,
+              "sd": 1.1764785239744453,
+              "n": 5
+            },
+            "shortfall": {
+              "mean": 14.632618115705807,
+              "sd": 11.709446596796559,
+              "n": 5
+            },
+            "readyDepartures": {
+              "mean": 2.6599999999999997,
+              "sd": 0.8080841540334767,
+              "n": 5
+            },
+            "departures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            }
+          },
+          "rule": {
+            "objective": {
+              "mean": 37.540625212233024,
+              "sd": 0,
+              "n": 5
+            },
+            "bill": {
+              "mean": 28.525579832601988,
+              "sd": 3.972054645195637e-15,
+              "n": 5
+            },
+            "carbon": {
+              "mean": 112.57178127545039,
+              "sd": 1.5888218580782548e-14,
+              "n": 5
+            },
+            "unserved": {
+              "mean": 0,
+              "sd": 0,
+              "n": 5
+            },
+            "shortfall": {
+              "mean": 0.04071741065793652,
+              "sd": 0,
+              "n": 5
+            },
+            "readyDepartures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            },
+            "departures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            }
+          },
+          "noBattery": {
+            "objective": {
+              "mean": 103.79002765743692,
+              "sd": 1.5888218580782548e-14,
+              "n": 5
+            },
+            "bill": {
+              "mean": 41.06555900907554,
+              "sd": 0,
+              "n": 5
+            },
+            "carbon": {
+              "mean": 116.06573012921521,
+              "sd": 1.5888218580782548e-14,
+              "n": 5
+            },
+            "unserved": {
+              "mean": 14.039635403878933,
+              "sd": 0,
+              "n": 5
+            },
+            "shortfall": {
+              "mean": 0.04071741065793652,
+              "sd": 0,
+              "n": 5
+            },
+            "readyDepartures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            },
+            "departures": {
+              "mean": 7.000000000000002,
+              "sd": 9.930136612989092e-16,
+              "n": 5
+            }
+          }
+        }
+      }
+    }
+  ]
+}
