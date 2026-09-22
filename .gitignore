@@ -13,3 +13,6 @@ experiments/local/
 /architecture-preview.png
 /mobile-preview.png
 *.egg-info/
+
+# CI stays local until GitHub workflow access is enabled.
+/.github/workflows/

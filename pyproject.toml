@@ -17,3 +17,9 @@ volt_lab = ["config.json"]
 [tool.pytest.ini_options]
 testpaths = ["python/tests"]
 pythonpath = ["python"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I"]

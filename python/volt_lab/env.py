@@ -1,7 +1,9 @@
 """Gymnasium API for the finite seven-day microgrid task."""
+
 import gymnasium as gym
 import numpy as np
-from .physics import MicrogridSimulator, CONFIG
+
+from .physics import CONFIG, MicrogridSimulator
 from .scenario import generate_scenario
 
 
@@ -19,12 +21,17 @@ class MicrogridEnv(gym.Env):
     def observation(self):
         buckets = self.simulator.buckets
         clock_scale = 95 if self.config["observation"] == "quarter-hour" else 23
-        return np.array(buckets, dtype=np.float32) / np.array([clock_scale, 5, 2, 2, 2, 1], dtype=np.float32)
+        return np.array(buckets, dtype=np.float32) / np.array(
+            [clock_scale, 5, 2, 2, 2, 1], dtype=np.float32
+        )
 
     def reset(self, *, seed=None, options=None):
         super().reset(seed=seed)
         options = options or {}
-        scenario_seed = options.get("scenario_seed", seed if seed is not None else int(self.np_random.integers(1, 70_000_000)))
+        scenario_seed = options.get(
+            "scenario_seed",
+            seed if seed is not None else int(self.np_random.integers(1, 70_000_000)),
+        )
         profile = options.get("profile", self.profile)
         self.simulator = MicrogridSimulator(generate_scenario(scenario_seed, profile), self.config)
         return self.observation(), {"scenario_seed": scenario_seed}
