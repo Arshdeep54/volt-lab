@@ -1,3 +1,11 @@
+import { createRun } from './experiments/artifact.mjs';
+import {
+  saveRun,
+  listRuns,
+  getRun,
+  deleteRun,
+  importRun,
+} from './experiments/store.mjs';
 import {
   MicrogridEnv,
   generateMicrogrid,
@@ -7,6 +15,10 @@ import {
 } from './microgrid.mjs';
 export const micro = {
   model: null,
+  record: null,
+  savedRuns: [],
+  provenance: {},
+  storageError: null,
   env: null,
   latest: null,
   running: false,
@@ -84,7 +96,10 @@ function advance() {
 }
 function reset() {
   micro.running = false;
-  micro.env = new MicrogridEnv(generateMicrogrid(micro.seed, micro.profile));
+  micro.env = new MicrogridEnv(
+    generateMicrogrid(micro.seed, micro.profile),
+    micro.model.config
+  );
   micro.latest = null;
   micro.events = [];
   advance();
@@ -95,6 +110,18 @@ export async function loadMicrogrid() {
     const response = await fetch('/src/microgrid-reference.json');
     if (!response.ok) throw new Error('Microgrid reference model unavailable');
     micro.model = await response.json();
+    const metadata = document.querySelector('meta[name="volt-build"]')?.content;
+    micro.provenance = metadata ? JSON.parse(metadata) : {};
+    micro.record = createRun(micro.model, {
+      ...micro.provenance,
+      source: 'reference',
+    });
+    micro.model = micro.record.model;
+    try {
+      micro.savedRuns = await listRuns();
+    } catch (error) {
+      micro.storageError = error.message;
+    }
     const params = new URLSearchParams(location.search);
     if (['balanced', 'cloudy', 'outage'].includes(params.get('profile')))
       micro.profile = params.get('profile');
@@ -120,6 +147,7 @@ export function microgridTick(render) {
 }
 export function microgridExport() {
   return {
+    ...micro.record,
     project: 'Volt Lab microgrid',
     version: '0.2.0',
     provenance: 'Actual joint-action Q-learning; simulated 15-minute telemetry',
@@ -136,7 +164,46 @@ export function microgridExport() {
     telemetry: micro.env.history,
   };
 }
-export async function microgridAction(action, render, toast, basicBusy) {
+export async function microgridAction(action, render, toast, basicBusy, runId) {
+  if (action === 'micro-save') {
+    try {
+      await saveRun(micro.record);
+      micro.savedRuns = await listRuns();
+      render();
+      toast('Experiment saved in this browser.');
+    } catch (error) {
+      toast('Could not save experiment: ' + error.message);
+    }
+    return;
+  }
+  if (action === 'micro-load' || action === 'micro-delete') {
+    if (micro.worker) {
+      toast('Finish training before changing saved experiments.');
+      return;
+    }
+    try {
+      if (action === 'micro-delete') await deleteRun(runId);
+      else {
+        micro.record = await getRun(runId);
+        micro.model = micro.record.model;
+        reset();
+      }
+      micro.savedRuns = await listRuns();
+      render();
+      toast(
+        action === 'micro-load'
+          ? 'Saved policy restored.'
+          : 'Saved experiment removed.'
+      );
+    } catch (error) {
+      toast(error.message);
+    }
+    return;
+  }
+  if (action === 'micro-import') {
+    document.querySelector('#import-run').click();
+    return;
+  }
   if (action === 'micro-play') {
     micro.running = !micro.running;
     micro.lastTick = Date.now();
@@ -199,13 +266,20 @@ export async function microgridAction(action, render, toast, basicBusy) {
       paused: false,
     };
     micro.worker = new Worker('/src/microgrid-worker.mjs', { type: 'module' });
-    micro.worker.onmessage = ({ data }) => {
+    micro.worker.onmessage = async ({ data }) => {
       if (data.type === 'progress') {
         micro.training.episodes = data.point.episode;
         micro.training.curve.push(data.point);
         render();
       } else if (data.type === 'complete') {
-        micro.model = data;
+        micro.record = createRun(data, micro.provenance);
+        micro.model = micro.record.model;
+        try {
+          await saveRun(micro.record);
+          micro.savedRuns = await listRuns();
+        } catch (error) {
+          micro.storageError = error.message;
+        }
         micro.worker.terminate();
         micro.worker = null;
         micro.training = null;
@@ -250,4 +324,21 @@ export function microgridChange(id, value, render) {
   if (['micro-profile', 'micro-controller', 'micro-scenario'].includes(id))
     reset();
   render();
+}
+
+export async function microgridImport(file, render, toast) {
+  if (micro.worker) {
+    toast('Finish training before importing a policy.');
+    return;
+  }
+  try {
+    micro.record = await importRun(file);
+    micro.model = micro.record.model;
+    micro.savedRuns = await listRuns();
+    reset();
+    render();
+    toast('Experiment imported and policy restored.');
+  } catch (error) {
+    toast('Could not import experiment: ' + error.message);
+  }
 }

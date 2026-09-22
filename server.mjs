@@ -17,20 +17,17 @@ const server = http.createServer(async (req, res) => {
     const name = decodeURIComponent(
       url.pathname === '/' ? '/index.html' : url.pathname
     );
-    if (
-      !['/index.html', '/styles.css'].includes(name) &&
-      !name.startsWith('/src/')
-    ) {
-      res.writeHead(404);
-      res.end('Not found');
-      return;
+    const publicFiles = ['/index.html', '/styles.css'];
+    const reportFiles = ['benchmark.json', 'ablations.json', 'dqn.json'];
+    let file;
+    if (publicFiles.includes(name)) file = path.join(root,name);
+    else if (name.startsWith('/src/reports/') && reportFiles.includes(name.slice('/src/reports/'.length))) {
+      file = path.join(root,'experiments/results',name.slice('/src/reports/'.length));
+    } else if (name.startsWith('/src/') && ['.mjs','.json'].includes(path.extname(name))) {
+      file = path.resolve(root,'.'+name);
+      if (!file.startsWith(path.join(root,'src') + path.sep)) file = null;
     }
-    const file = path.resolve(root, '.' + name);
-    if (!file.startsWith(root + path.sep)) {
-      res.writeHead(403);
-      res.end('Forbidden');
-      return;
-    }
+    if (!file) { res.writeHead(404); res.end('Not found'); return; }
     const body = await readFile(file);
     res.writeHead(200, {
       'Content-Type': types[path.extname(file)] || 'application/octet-stream',

@@ -9,7 +9,9 @@ async function waitFor(page, predicate, argument, { timeout = 30000 } = {}) {
     if (await page.evaluate(predicate, argument)) return;
     await page.waitForTimeout(50);
   }
-  throw new Error('Browser condition did not become true within ' + timeout + 'ms');
+  throw new Error(
+    'Browser condition did not become true within ' + timeout + 'ms'
+  );
 }
 const browser = await chromium.launch({ headless: true });
 try {
@@ -38,7 +40,9 @@ try {
     await page.locator('[data-action="micro-reset"]').click();
     await page.locator('#micro-speed').selectOption(speed);
     await page.locator('[data-action="micro-play"]').click();
-    await waitFor(page, () => document.querySelector('.scene-time').textContent.includes('00:45'));
+    await waitFor(page, () =>
+      document.querySelector('.scene-time').textContent.includes('00:45')
+    );
     await page.locator('[data-action="micro-play"]').click();
     assert.equal(await page.locator('#micro-speed').inputValue(), speed);
   }
@@ -74,7 +78,8 @@ try {
     previousEvaluation
   );
   await page.locator('[data-action="micro-pause"]').click();
-  await waitFor(page, 
+  await waitFor(
+    page,
     () => !document.querySelector('[data-action="micro-pause"]'),
     null,
     { timeout: 45000 }
@@ -92,7 +97,9 @@ try {
   assert.equal(artifact.telemetry.length, 1);
   assert.equal(artifact.scenario.seed, 920000003);
   assert.equal(artifact.scenario.controller, 'rule');
-  assert.ok(Math.abs(artifact.model.evaluations.cloudy.learned.departures - 7) < 1e-9);
+  assert.ok(
+    Math.abs(artifact.model.evaluations.cloudy.learned.departures - 7) < 1e-9
+  );
   await page.context().grantPermissions(['clipboard-read', 'clipboard-write']);
   await page.locator('[data-action="micro-share"]').click();
   const url = new URL(

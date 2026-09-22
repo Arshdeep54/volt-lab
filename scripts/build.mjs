@@ -1,4 +1,13 @@
-import { mkdir, readdir, copyFile, rm } from 'node:fs/promises';
+import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
+import {
+  mkdir,
+  readdir,
+  copyFile,
+  rm,
+  readFile,
+  writeFile,
+} from 'node:fs/promises';
 const root = new URL('../', import.meta.url);
 const dist = new URL('dist/', root);
 await rm(dist, { recursive: true, force: true });
@@ -20,5 +29,32 @@ async function copySources(source, target) {
   }
   return count;
 }
+await mkdir(new URL('src/reports/', dist), { recursive: true });
+for (const name of ['benchmark', 'ablations', 'dqn']) {
+  await copyFile(
+    new URL('experiments/results/' + name + '.json', root),
+    new URL('src/reports/' + name + '.json', dist)
+  );
+}
+const metadata = {
+  commit: execFileSync('git', ['rev-parse', 'HEAD'], {
+    cwd: root,
+    encoding: 'utf8',
+  }).trim(),
+  environmentHash: createHash('sha256')
+    .update(await readFile(new URL('src/microgrid/environment.mjs', root)))
+    .digest('hex'),
+  scenarioHash: createHash('sha256')
+    .update(await readFile(new URL('src/microgrid/scenario.mjs', root)))
+    .digest('hex'),
+};
+const html = await readFile(new URL('index.html', dist), 'utf8');
+await writeFile(
+  new URL('index.html', dist),
+  html.replace(
+    '</head>',
+    "<meta name=volt-build content='" + JSON.stringify(metadata) + "'>\n</head>"
+  )
+);
 const count = await copySources(new URL('src/', root), new URL('src/', dist));
 console.log('Built ' + (count + 3) + ' public assets in dist/');

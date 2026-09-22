@@ -1,3 +1,5 @@
+import { select } from './ui/controls.mjs';
+import { learningPanel } from './ui/microgrid-learning.mjs';
 import { micro, clock } from './microgrid-controller.mjs';
 export {
   micro,
@@ -8,32 +10,6 @@ export {
   microgridExport,
 } from './microgrid-controller.mjs';
 const batteryNames = ['Charge', 'Idle', 'Discharge'];
-function select(id, values, current) {
-  return (
-    '<select id="' +
-    id +
-    '" class="select" ' +
-    (micro.training && ['micro-budget', 'micro-train-seed'].includes(id)
-      ? 'disabled'
-      : '') +
-    ' aria-label="' +
-    id.replace('micro-', 'Microgrid ') +
-    '">' +
-    values
-      .map(
-        ([value, label]) =>
-          '<option value="' +
-          value +
-          '" ' +
-          (value === current ? 'selected' : '') +
-          '>' +
-          label +
-          '</option>'
-      )
-      .join('') +
-    '</select>'
-  );
-}
 export function microgridView({ heading, scene, chart, money, number }) {
   if (micro.error)
     return heading(
@@ -46,7 +22,6 @@ export function microgridView({ heading, scene, chart, money, number }) {
     model = micro.model,
     train = micro.training,
     e = model.evaluations[micro.profile];
-  const curve = train ? train.curve : model.curve;
   let illustration = scene({ ...x, demand: x.home });
   illustration = illustration.replace(
     'Home energy flow: solar, house, grid, and battery',
@@ -261,51 +236,8 @@ export function microgridView({ heading, scene, chart, money, number }) {
       )
       .join('') +
     '</div></section></div>' +
-    '<div class="micro-bottom"><section class="panel"><div class="panel-head"><div><h2 class="panel-title">Learning to coordinate the home</h2><div class="panel-subtitle">' +
-    (train ? 'New training run' : 'Completed model') +
-    ' · seed ' +
-    (train ? micro.trainSeed : model.seed) +
-    ' · ' +
-    number(train ? train.episodes : model.episodes) +
-    ' episodes</div></div><span class="pill">' +
-    (train ? (train.paused ? 'PAUSED' : 'TRAINING') : 'Q-LEARNING') +
-    '</span></div><div class="legend"><span><i></i>Training · 50-episode mean</span><span><i class="secondary"></i>Validation · 2 weeks</span></div><div class="chart-wrap">' +
-    (curve.length
-      ? chart(
-          [
-            {
-              color: '#168477',
-              values: curve.map((p) => ({ x: p.episode, y: p.reward })),
-            },
-            {
-              color: '#4e83b3',
-              values: curve.map((p) => ({ x: p.episode, y: p.validation })),
-            },
-          ],
-          { ylabel: 'Objective return ($ / week)', height: 225 }
-        )
-      : '<p class="chart-caption">Collecting the first 50 training episodes…</p>') +
-    '</div><div class="micro-experiment-controls"><label>Budget ' +
-    select(
-      'micro-budget',
-      [
-        [3000, '3,000 episodes'],
-        [6000, '6,000 episodes'],
-        [12000, '12,000 episodes'],
-      ],
-      micro.budget
-    ) +
-    '</label><label>Seed ' +
-    select(
-      'micro-train-seed',
-      [
-        [42, '42'],
-        [43, '43'],
-        [44, '44'],
-      ],
-      micro.trainSeed
-    ) +
-    '</label></div><div class="chart-caption">7,776 approximate states · 9 joint actions · 672 steps per week. Training runs in a Web Worker. Live simulation uses the last completed policy.</div></section>' +
+    '<div class="micro-bottom">' +
+    learningPanel(micro) +
     '<section class="panel"><div class="panel-head"><div><h2 class="panel-title">Cost, readiness, and resilience</h2><div class="panel-subtitle">Completed model · ' +
     micro.profile +
     ' profile · 10 held-out weeks</div></div></div><table class="action-table micro-evaluation"><thead><tr><th>Controller</th><th>Objective</th><th>CO₂ kg</th><th>EV ready</th></tr></thead><tbody>' +

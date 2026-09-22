@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="theme-color" content="#122d39" />
-    <title>Volt Lab — Reinforcement learning studio</title>
+    <title>Volt Lab — Microgrid control experiments</title>
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
@@ -13,32 +13,51 @@
         ><span class="brand-symbol">ϟ</span
         ><span
           >volt<span class="brand-light">lab</span
-          ><small>REINFORCEMENT LEARNING STUDIO</small></span
+          ><small>MICROGRID CONTROL EXPERIMENTS</small></span
         ></a
       >
       <div class="workspace-label">YOUR WORKSPACE</div>
       <nav aria-label="Main navigation">
-        <button data-view="overview" class="nav-item active">
-          <span>◈</span>Environment<span class="nav-badge">LIVE</span></button
-        ><button data-view="microgrid" class="nav-item"><span>ϟ</span>Microgrid lab<span class="nav-badge">NEW</span></button><button data-view="training" class="nav-item">
-          <span>⌁</span>Training lab</button
-        ><button data-view="results" class="nav-item">
-          <span>▥</span>Evaluation</button
-        ><button data-view="architecture" class="nav-item">
-          <span>⤳</span>How it works</button
-        ><button data-view="glossary" class="nav-item">
-          <span>▤</span>RL field guide
+        <button data-view="experiments" class="nav-item active">
+          <span>⌁</span>Experiments
+        </button>
+        <button data-view="microgrid" class="nav-item">
+          <span>ϟ</span>Scenario replay
+        </button>
+        <button data-view="evaluation" class="nav-item">
+          <span>▥</span>Evaluation
+        </button>
+        <button data-view="diagnostics" class="nav-item">
+          <span>◈</span>Diagnostics
+        </button>
+        <div class="workspace-label">REFERENCE AND HELP</div>
+        <button data-view="overview" class="nav-item">
+          <span>◈</span>Battery sandbox
+        </button>
+        <button data-view="training" class="nav-item">
+          <span>⌁</span>Battery training
+        </button>
+        <button data-view="results" class="nav-item">
+          <span>▥</span>Battery benchmark
+        </button>
+        <button data-view="architecture" class="nav-item">
+          <span>⤳</span>Architecture
+        </button>
+        <button data-view="glossary" class="nav-item">
+          <span>?</span>RL field guide
         </button>
       </nav>
       <div class="sidebar-project">
         <span class="tiny-label">PROJECT 001</span
         ><strong>A smarter energy day.</strong>
-        <p>A home, solar, battery, and EV.<br />Learn to coordinate energy.</p>
+        <p>
+          A home, solar, battery, and EV.<br />Reproducible control experiments.
+        </p>
         <span class="project-tag">CUSTOM ENVIRONMENT</span>
       </div>
       <div class="sidebar-bottom">
         <span class="status-dot"></span>Local compute · no cloud required<small
-          >Volt Lab / Studio 0.2</small
+          >Volt Lab / Workspace 0.3</small
         >
       </div>
     </aside>
@@ -62,6 +81,7 @@
         >
       </footer>
     </div>
+    <input type="file" id="import-run" accept=".json,application/json" hidden />
     <div id="toast" role="status" aria-live="polite"></div>
     <script type="module" src="/src/app.mjs"></script>
   </body>

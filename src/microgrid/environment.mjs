@@ -33,7 +33,15 @@ export class MicrogridEnv {
     const ev = deficit < 0.1 ? 0 : deficit < 8 ? 1 : 2;
     const urgency = !this.evConnected ? 0 : r.hour < 7 && r.hour >= 3 ? 2 : 1;
     return (
-      (((((this.config.observation === 'quarter-hour' ? r.hour * 4 + r.minute / 15 : r.hour) * 6 + soc) * 3 + ev) * 3 + (net < 0 ? 0 : net < 1.5 ? 1 : 2)) *
+      (((((this.config.observation === 'quarter-hour'
+        ? r.hour * 4 + r.minute / 15
+        : r.hour) *
+        6 +
+        soc) *
+        3 +
+        ev) *
+        3 +
+        (net < 0 ? 0 : net < 1.5 ? 1 : 2)) *
         3 +
         urgency) *
         2 +

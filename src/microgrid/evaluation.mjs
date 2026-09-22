@@ -22,7 +22,10 @@ export function evaluateMicrogrid(
       readyDepartures: 0,
     };
     for (const seed of seeds) {
-      const env = new MicrogridEnv(generateMicrogrid(seed, profile, scenarioOptions), config);
+      const env = new MicrogridEnv(
+        generateMicrogrid(seed, profile, scenarioOptions),
+        config
+      );
       while (!env.done) {
         const rule = microRule(env);
         env.step(

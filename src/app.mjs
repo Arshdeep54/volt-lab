@@ -1,4 +1,11 @@
 import {
+  loadReports,
+  experimentsView,
+  evaluationView,
+  diagnosticsView,
+} from './ui/workspace-views.mjs';
+import { microgridImport } from './microgrid-controller.mjs';
+import {
   micro,
   loadMicrogrid,
   microgridView,
@@ -18,7 +25,7 @@ import { CONFIG, QAgent } from './rl.mjs';
 const $ = (s) => document.querySelector(s);
 let reference,
   run,
-  view = 'overview',
+  view = 'experiments',
   hour = 12,
   playing = false,
   controller = 'learned',
@@ -33,7 +40,10 @@ let reference,
 let chosenSeed = 42,
   chosenEpisodes = 1200;
 const labels = {
-  overview: 'Environment',
+  experiments: 'Experiments',
+  evaluation: 'Evaluation',
+  diagnostics: 'Diagnostics',
+  overview: 'Battery sandbox',
   microgrid: 'Microgrid lab',
   training: 'Training lab',
   results: 'Evaluation',
@@ -69,6 +79,9 @@ function render() {
     chosenEpisodes,
   });
   $('#main').innerHTML = {
+    experiments: experimentsView,
+    evaluation: evaluationView,
+    diagnostics: diagnosticsView,
     overview,
     microgrid: () => microgridView({ heading, scene, chart, money, number }),
     training,
@@ -159,35 +172,43 @@ function start(type = 'train') {
   render();
 }
 function exportRun() {
-  const artifact =
-    view === 'microgrid'
-      ? microgridExport()
-      : {
-          project: 'Volt Lab',
-          version: '0.1.0',
-          provenance:
-            'Actual tabular Q-learning; synthetic hourly energy environment',
-          exportedAt: new Date().toISOString(),
-          status: busy ? 'in-progress' : 'complete',
-          config: CONFIG,
-          algorithm: {
-            name: 'Q-learning',
-            alpha: 0.25,
-            gamma: 0.97,
-            epsilonFloor: 0.05,
-          },
-          run,
-          benchmarks,
-        };
+  const artifact = [
+    'microgrid',
+    'experiments',
+    'evaluation',
+    'diagnostics',
+  ].includes(view)
+    ? microgridExport()
+    : {
+        project: 'Volt Lab',
+        version: '0.1.0',
+        provenance:
+          'Actual tabular Q-learning; synthetic hourly energy environment',
+        exportedAt: new Date().toISOString(),
+        status: busy ? 'in-progress' : 'complete',
+        config: CONFIG,
+        algorithm: {
+          name: 'Q-learning',
+          alpha: 0.25,
+          gamma: 0.97,
+          epsilonFloor: 0.05,
+        },
+        run,
+        benchmarks,
+      };
   const url = URL.createObjectURL(
     new Blob([JSON.stringify(artifact, null, 2)], { type: 'application/json' })
   );
   const a = document.createElement('a');
   a.href = url;
-  a.download =
-    view === 'microgrid'
-      ? 'volt-lab-microgrid.json'
-      : 'volt-lab-seed-' + run.seed + '.json';
+  a.download = [
+    'microgrid',
+    'experiments',
+    'evaluation',
+    'diagnostics',
+  ].includes(view)
+    ? 'volt-lab-microgrid.json'
+    : 'volt-lab-seed-' + run.seed + '.json';
   a.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
   toast('Experiment exported with metrics, settings, and Q-table.');
@@ -204,7 +225,13 @@ document.addEventListener('click', (e) => {
     return;
   }
   if (target.dataset.action?.startsWith('micro-')) {
-    microgridAction(target.dataset.action, render, toast, busy);
+    microgridAction(
+      target.dataset.action,
+      render,
+      toast,
+      busy,
+      target.dataset.runId
+    );
     return;
   }
   switch (target.dataset.action) {
@@ -242,6 +269,11 @@ document.addEventListener('input', (e) => {
     $('#terms').innerHTML = termCards(e.target.value);
 });
 document.addEventListener('change', (e) => {
+  if (e.target.id === 'import-run') {
+    if (e.target.files[0]) microgridImport(e.target.files[0], render, toast);
+    e.target.value = '';
+    return;
+  }
   if (e.target.id.startsWith('micro-')) {
     microgridChange(e.target.id, e.target.value, render);
     return;
@@ -276,8 +308,15 @@ try {
   reference = await response.json();
   run = structuredClone(reference);
   await loadMicrogrid();
+  try {
+    await loadReports();
+  } catch (error) {
+    toast(error.message);
+  }
   if (new URLSearchParams(location.search).get('lab') === 'microgrid')
     view = 'microgrid';
+  if (new URLSearchParams(location.search).get('lab') === 'battery')
+    view = 'overview';
   render();
 } catch (error) {
   $('#main').innerHTML =

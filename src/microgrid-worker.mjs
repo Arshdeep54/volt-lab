@@ -45,6 +45,7 @@ self.onmessage = async ({ data }) => {
     );
     self.postMessage({
       type: 'complete',
+      config: agent.config,
       seed: data.seed,
       episodes: data.episodes,
       q: Array.from(agent.q),

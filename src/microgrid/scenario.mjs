@@ -1,5 +1,9 @@
 import { random } from '../rl.mjs';
-export function generateMicrogrid(seed, profile = 'balanced', { outageHours = 3 } = {}) {
+export function generateMicrogrid(
+  seed,
+  profile = 'balanced',
+  { outageHours = 3 } = {}
+) {
   const rng = random(seed),
     rows = [],
     outageDay = Math.floor(rng() * 7);

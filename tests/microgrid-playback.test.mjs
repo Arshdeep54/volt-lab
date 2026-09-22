@@ -8,7 +8,11 @@ test('playback advances every physics interval at 1×, 2×, and 4× despite 100m
   let now = 0;
   Date.now = () => now;
   try {
-    for (const [speed, steps] of [[1000, 1], [500, 2], [250, 4]]) {
+    for (const [speed, steps] of [
+      [1000, 1],
+      [500, 2],
+      [250, 4],
+    ]) {
       micro.env = new MicrogridEnv(generateMicrogrid(42));
       micro.model = { q: new Float32Array(7776 * 9) };
       micro.latest = null;
@@ -19,7 +23,11 @@ test('playback advances every physics interval at 1×, 2×, and 4× despite 100m
       micro.running = true;
       let renders = 0;
       for (now = 100; now <= 1000; now += 100) microgridTick(() => renders++);
-      assert.equal(micro.env.t, steps, 'intervals for ' + speed + 'ms playback');
+      assert.equal(
+        micro.env.t,
+        steps,
+        'intervals for ' + speed + 'ms playback'
+      );
       assert.equal(renders, steps);
       micro.running = false;
       now = 2000;

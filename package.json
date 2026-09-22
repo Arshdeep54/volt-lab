@@ -1,6 +1,6 @@
 {
   "name": "volt-lab",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -11,9 +11,14 @@
     "predeploy": "npm run build",
     "deploy": "wrangler deploy",
     "benchmark:microgrid": "node scripts/run-experiments.mjs 6000 benchmark",
-    "ablations": "node scripts/run-experiments.mjs 6000 ablations"
+    "ablations": "node scripts/run-experiments.mjs 6000 ablations",
+    "test:browser": "node scripts/verify-ui.mjs && node scripts/verify-microgrid-ui.mjs && node scripts/verify-workspace-ui.mjs",
+    "format": "prettier --write \"src/**/*.mjs\" \"scripts/*.mjs\" \"tests/*.mjs\" index.html styles.css README.md AGENTS.md",
+    "format:check": "prettier --check \"src/**/*.mjs\" \"scripts/*.mjs\" \"tests/*.mjs\" index.html styles.css README.md AGENTS.md"
   },
   "devDependencies": {
+    "playwright": "1.64.0",
+    "prettier": "3.9.9",
     "wrangler": "^4.148.0"
   },
   "overrides": {

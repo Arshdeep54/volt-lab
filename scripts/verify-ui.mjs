@@ -10,7 +10,9 @@ async function waitFor(page, predicate, argument, { timeout = 30000 } = {}) {
     if (await page.evaluate(predicate, argument)) return;
     await page.waitForTimeout(50);
   }
-  throw new Error('Browser condition did not become true within ' + timeout + 'ms');
+  throw new Error(
+    'Browser condition did not become true within ' + timeout + 'ms'
+  );
 }
 const browser = await chromium.launch({ headless: true });
 try {
@@ -22,7 +24,9 @@ try {
   page.on('console', (m) => {
     if (m.type() === 'error') errors.push(m.text());
   });
-  await page.goto(process.env.BASE_URL || 'http://localhost:5173');
+  await page.goto(
+    (process.env.BASE_URL || 'http://localhost:5173') + '/?lab=battery'
+  );
   await page
     .getByRole('heading', { name: 'Small decisions. Smarter energy.' })
     .waitFor();
@@ -43,7 +47,8 @@ try {
     await page.keyboard.press('Tab');
     await page.locator('.scene-' + phase).waitFor({ timeout: 3000 });
     if (replayHour === 0) {
-      await waitFor(page, 
+      await waitFor(
+        page,
         ({ from, to }) => {
           const shown = document
             .querySelector('.scene')
@@ -58,7 +63,8 @@ try {
       );
     }
 
-    await waitFor(page, 
+    await waitFor(
+      page,
       (color) =>
         document
           .querySelector('.scene')
@@ -103,7 +109,8 @@ try {
   await page.locator('.nav-item[data-view="results"]').click();
   assert.match(await page.locator('.bar-list').innerText(), /30.79/);
   await page.locator('[data-action="benchmark"]').click();
-  await waitFor(page, 
+  await waitFor(
+    page,
     () =>
       document
         .querySelector('main')
