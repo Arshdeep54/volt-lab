@@ -12,3 +12,4 @@ experiments/local/
 /*-preview.png
 /architecture-preview.png
 /mobile-preview.png
+*.egg-info/

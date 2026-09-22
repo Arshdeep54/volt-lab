@@ -1,0 +1,23 @@
+{
+  "observation": "hourly",
+  "dt": 0.25,
+  "steps": 672,
+  "capacity": 10,
+  "batteryPower": 3,
+  "efficiency": 0.95,
+  "gridLimit": 5,
+  "evCapacity": 40,
+  "evTarget": 32,
+  "evEfficiency": 0.92,
+  "evRates": [
+    0,
+    1.8,
+    3.6
+  ],
+  "wear": 0.015,
+  "carbonWeight": 0.05,
+  "unservedPenalty": 4,
+  "deadlinePenalty": 2,
+  "initialSoc": 5,
+  "initialEvSoc": 24
+}
