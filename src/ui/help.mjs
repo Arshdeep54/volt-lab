@@ -6,7 +6,7 @@ export function architecture() {
       'The loop behind every decision.',
       'A real simulator. A learning agent. A feedback loop you can inspect.'
     ) +
-    '<section class="panel architecture"><div class="flow-top"><article class="flow-node"><div class="eyebrow">ENVIRONMENT / BATTERYENV</div><h2>The simulated home</h2><p>Demand + solar + electricity price<br>Battery capacity: 10 kWh<br>Actions advance time by 1 hour.</p></article><div class="flow-arrow">→</div><article class="flow-node"><div class="eyebrow">OBSERVATION → STATE</div><h2>What the agent sees</h2><p>Hour of day × battery charge bucket × net demand bucket = 792 states.<br>No future actual values are exposed.</p></article><div class="flow-arrow">→</div><article class="flow-node highlight"><div class="eyebrow">AGENT / Q-TABLE</div><h2>Choose an action</h2><p>Charge, idle, or discharge.<br>Explore with probability ε.<br>Otherwise choose the highest Q-value.</p></article></div><div class="flow-return">← Apply action → enforce physical limits → calculate reward + next state → update Q(s,a) → repeat for 168 hours ↺</div><div class="flow-bottom"><article><h3>What gets learned?</h3><p>A <span class="keyword">Q-value</span> estimates the discounted future return of taking an action in a state. The <span class="keyword">Bellman update</span> adjusts that estimate using the reward and best next-state value. Terminal transitions do not bootstrap.</p></article><article><h3>What creates the reward?</h3><p><span class="keyword">r = −(grid bill + wear + settlement)</span><br>Charge/discharge limits and efficiency are enforced directly in the simulator. End-of-week settlement values remaining battery energy relative to its starting charge.</p></article><article><h3>How training reaches the dashboard</h3><p>A browser <span class="keyword">Web Worker</span> runs the simulator and Q-learning off the main thread. Every 25 episodes it sends a Q-table snapshot, training mean, validation return, and exploration rate to the UI.</p></article><article><h3>How we check the result</h3><p>Freeze exploration at zero. Run the learned policy, a rule-based controller, and no battery on the same held-out weeks. Repeat training across five seeds to measure variability.</p></article></div></section><div class="info-strip neutral"><strong>Deliberately small.</strong><span>Tabular Q-learning has no neural network or backpropagation. A later version can keep this simulator and add a Gymnasium adapter with DQN or SAC.</span></div>'
+    '<section class="panel architecture"><div class="flow-top"><article class="flow-node"><div class="eyebrow">ENVIRONMENT / BATTERYENV</div><h2>The simulated home</h2><p>Demand + solar + electricity price<br>Battery capacity: 10 kWh<br>Actions advance time by 1 hour.</p></article><div class="flow-arrow">→</div><article class="flow-node"><div class="eyebrow">OBSERVATION → STATE</div><h2>What the agent sees</h2><p>Hour of day × battery charge bucket × net demand bucket = 792 states.<br>No future actual values are exposed.</p></article><div class="flow-arrow">→</div><article class="flow-node highlight"><div class="eyebrow">AGENT / Q-TABLE</div><h2>Choose an action</h2><p>Charge, idle, or discharge.<br>Explore with probability ε.<br>Otherwise choose the highest Q-value.</p></article></div><div class="flow-return">← Apply action → enforce physical limits → calculate reward + next state → update Q(s,a) → repeat for 168 hours ↺</div><div class="flow-bottom"><article><h3>What gets learned?</h3><p>A <span class="keyword">Q-value</span> estimates the discounted future return of taking an action in a state. The <span class="keyword">Bellman update</span> adjusts that estimate using the reward and best next-state value. Terminal transitions do not bootstrap.</p></article><article><h3>What creates the reward?</h3><p><span class="keyword">r = −(grid bill + wear + settlement)</span><br>Charge/discharge limits and efficiency are enforced directly in the simulator. End-of-week settlement values remaining battery energy relative to its starting charge.</p></article><article><h3>How training reaches the dashboard</h3><p>A browser <span class="keyword">Web Worker</span> runs the simulator and Q-learning off the main thread. Every 25 episodes it sends a Q-table snapshot, training mean, validation return, and exploration rate to the UI.</p></article><article><h3>How we check the result</h3><p>Freeze exploration at zero. Run the learned policy, a rule-based controller, and no battery on the same held-out weeks. Repeat training across five seeds to measure variability.</p></article></div></section><div class="info-strip neutral"><strong>Deliberately small.</strong><span>Tabular Q-learning has no neural network or backpropagation. The microgrid also has a Python Gymnasium environment and an offline Stable-Baselines3 DQN comparison, verified against the browser physics.</span></div>'
   );
 }
 const terms = [
@@ -78,7 +78,7 @@ const terms = [
   [
     'Learning rate / α',
     'Controls how much each new experience changes the current value estimate.',
-    'α = 0.25 in this MVP.',
+    'α = 0.25 in the battery sandbox.',
   ],
   [
     'Discount factor / γ',
@@ -123,7 +123,7 @@ const terms = [
   [
     'On-policy learning',
     'Learns about the policy currently collecting experience.',
-    'A contrast to this MVP; methods such as SARSA use the next action actually selected.',
+    'A contrast to the battery sandbox; methods such as SARSA use the next action actually selected.',
   ],
   [
     'Markov decision process / MDP',
@@ -143,12 +143,12 @@ const terms = [
   [
     'PPO',
     'Proximal policy optimization: a policy-gradient method that limits the scale of policy updates.',
-    'Another possible future comparison; not implemented in this MVP.',
+    'Another possible future comparison; not implemented in the battery sandbox.',
   ],
   [
     'DQN',
     'Deep Q-network: approximates Q-values with a neural network instead of a table, commonly using replay and target networks.',
-    'A future extension; this MVP does not implement DQN.',
+    'Implemented offline in Python with Stable-Baselines3; browser training remains tabular Q-learning.',
   ],
   [
     'SAC',

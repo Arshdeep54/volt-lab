@@ -26,9 +26,9 @@ export class MicrogridAgent {
           this.rng() < this.epsilon
             ? Math.floor(this.rng() * 9)
             : microGreedy(this.q, state),
-        x = env.step(action);
+        transition = env.step(action);
       const target =
-        x.reward +
+        transition.reward +
         (env.done
           ? 0
           : this.gamma *

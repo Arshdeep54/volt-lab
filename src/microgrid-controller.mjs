@@ -11,7 +11,6 @@ import {
   generateMicrogrid,
   microGreedy,
   microRule,
-  MICRO_CONFIG,
 } from './microgrid.mjs';
 export const micro = {
   model: null,
@@ -149,10 +148,10 @@ export function microgridExport() {
   return {
     ...micro.record,
     project: 'Volt Lab microgrid',
-    version: '0.2.0',
+    version: '0.3.0',
     provenance: 'Actual joint-action Q-learning; simulated 15-minute telemetry',
     exportedAt: new Date().toISOString(),
-    config: MICRO_CONFIG,
+    config: micro.model.config,
     model: micro.model,
     training: micro.training,
     scenario: {

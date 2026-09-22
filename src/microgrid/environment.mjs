@@ -26,16 +26,20 @@ export class MicrogridEnv {
     return this.row.hour < 7 || this.row.hour >= 18;
   }
   get state() {
-    const r = this.row,
-      net = r.home - r.solar;
+    const row = this.row,
+      net = row.home - row.solar;
     const soc = Math.min(5, Math.round(this.soc / 2));
     const deficit = this.evConnected ? Math.max(0, 32 - this.evSoc) : 0;
     const ev = deficit < 0.1 ? 0 : deficit < 8 ? 1 : 2;
-    const urgency = !this.evConnected ? 0 : r.hour < 7 && r.hour >= 3 ? 2 : 1;
+    const urgency = !this.evConnected
+      ? 0
+      : row.hour < 7 && row.hour >= 3
+        ? 2
+        : 1;
     return (
       (((((this.config.observation === 'quarter-hour'
-        ? r.hour * 4 + r.minute / 15
-        : r.hour) *
+        ? row.hour * 4 + row.minute / 15
+        : row.hour) *
         6 +
         soc) *
         3 +
@@ -45,92 +49,97 @@ export class MicrogridEnv {
         3 +
         urgency) *
         2 +
-      Number(r.gridAvailable)
+      Number(row.gridAvailable)
     );
   }
   step(index) {
     if (this.done) throw new Error('Episode finished; restart the microgrid.');
     if (!Number.isInteger(index) || index < 0 || index > 8)
       throw new Error('Joint action must be between 0 and 8.');
-    const r = this.row,
-      a = MICRO_ACTIONS[index],
-      c = this.config,
+    const row = this.row,
+      action = MICRO_ACTIONS[index],
+      config = this.config,
       previousSoc = this.soc,
       evConnected = this.evConnected;
     const requestedEv = evConnected
       ? Math.min(
-          c.evRates[a.ev],
-          Math.max(0, c.evTarget - this.evSoc) / (c.evEfficiency * c.dt)
+          config.evRates[action.ev],
+          Math.max(0, config.evTarget - this.evSoc) /
+            (config.evEfficiency * config.dt)
         )
       : 0;
     const discharge =
-      a.battery === 2
+      action.battery === 2
         ? Math.min(
-            c.batteryPower,
-            (this.soc * c.efficiency) / c.dt,
-            Math.max(0, r.home + requestedEv - r.solar)
+            config.batteryPower,
+            (this.soc * config.efficiency) / config.dt,
+            Math.max(0, row.home + requestedEv - row.solar)
           )
         : 0;
-    const supply = r.solar + (r.gridAvailable ? c.gridLimit : 0) + discharge;
-    const servedHome = Math.min(r.home, supply);
+    const supply =
+      row.solar + (row.gridAvailable ? config.gridLimit : 0) + discharge;
+    const servedHome = Math.min(row.home, supply);
     const evPower = Math.min(requestedEv, Math.max(0, supply - servedHome));
     const charge =
-      a.battery === 0
+      action.battery === 0
         ? Math.min(
-            c.batteryPower,
-            (c.capacity - this.soc) / (c.efficiency * c.dt),
+            config.batteryPower,
+            (config.capacity - this.soc) / (config.efficiency * config.dt),
             Math.max(0, supply - servedHome - evPower)
           )
         : 0;
-    const balance = servedHome + evPower + charge - r.solar - discharge;
+    const balance = servedHome + evPower + charge - row.solar - discharge;
     const grid = Math.max(0, balance),
       curtailed = Math.max(0, -balance);
     this.soc = Math.max(
       0,
       Math.min(
-        c.capacity,
-        this.soc + (charge * c.efficiency - discharge / c.efficiency) * c.dt
+        config.capacity,
+        this.soc +
+          (charge * config.efficiency - discharge / config.efficiency) *
+            config.dt
       )
     );
     this.evSoc = Math.min(
-      c.evTarget,
-      this.evSoc + evPower * c.evEfficiency * c.dt
+      config.evTarget,
+      this.evSoc + evPower * config.evEfficiency * config.dt
     );
-    const unserved = (r.home - servedHome) * c.dt;
+    const unserved = (row.home - servedHome) * config.dt;
     let shortfall = 0,
       departure = false;
-    if (r.hour === 6 && r.minute === 45) {
+    if (row.hour === 6 && row.minute === 45) {
       departure = true;
-      shortfall = Math.max(0, c.evTarget - this.evSoc);
+      shortfall = Math.max(0, config.evTarget - this.evSoc);
       this.totals.departures++;
       if (shortfall < 0.1) this.totals.readyDepartures++;
-      this.evSoc = Math.max(0, this.evSoc - r.trip);
+      this.evSoc = Math.max(0, this.evSoc - row.trip);
     }
     this.t++;
     this.done = this.t === this.scenario.length;
-    const bill = grid * c.dt * r.price,
-      carbon = grid * c.dt * r.carbon,
-      wear = (charge + discharge) * c.dt * c.wear;
+    const bill = grid * config.dt * row.price,
+      carbon = grid * config.dt * row.carbon,
+      wear = (charge + discharge) * config.dt * config.wear;
     const settlement = this.done
-      ? (c.initialSoc - this.soc + (c.initialEvSoc - this.evSoc)) * 0.12
+      ? (config.initialSoc - this.soc + (config.initialEvSoc - this.evSoc)) *
+        0.12
       : 0;
     const cost =
       bill +
       wear +
-      carbon * c.carbonWeight +
-      unserved * c.unservedPenalty +
-      shortfall * c.deadlinePenalty +
+      carbon * config.carbonWeight +
+      unserved * config.unservedPenalty +
+      shortfall * config.deadlinePenalty +
       settlement;
-    const x = {
-      ...r,
+    const transition = {
+      ...row,
       index: this.t - 1,
       previousSoc,
       soc: this.soc,
       evSoc: this.evSoc,
       evConnected,
       action: index,
-      batteryAction: a.battery,
-      evAction: a.ev,
+      batteryAction: action.battery,
+      evAction: action.ev,
       requestedEv,
       evPower,
       servedHome,
@@ -155,10 +164,10 @@ export class MicrogridEnv {
       carbon,
       unserved,
       shortfall,
-      gridEnergy: grid * c.dt,
+      gridEnergy: grid * config.dt,
     }))
       this.totals[key] += value;
-    this.history.push(x);
-    return x;
+    this.history.push(transition);
+    return transition;
   }
 }

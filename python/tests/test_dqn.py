@@ -27,3 +27,25 @@ def test_dqn_trains_and_restored_policy_matches(tmp_path):
     np.testing.assert_array_equal(action, actual)
     assert env.action_space.contains(action)
     env.close()
+
+
+def test_published_replay_matches_restored_dqn():
+    import json
+    from pathlib import Path
+
+    import pytest
+    import torch
+
+    torch.set_num_threads(1)
+    root = Path(__file__).resolve().parents[2]
+    replay = json.loads((root / "src/dqn-replay.json").read_text())
+    model = DQN.load(root / "experiments/models/dqn-seed-42.zip", device="cpu")
+    env = MicrogridEnv()
+    obs, _ = env.reset(seed=replay["scenarioSeed"])
+    for expected in replay["telemetry"]:
+        action, _ = model.predict(obs, deterministic=True)
+        assert int(action) == expected["action"]
+        obs, reward, _, _, _ = env.step(int(action))
+        assert reward == pytest.approx(expected["reward"], abs=1e-9)
+    assert env.simulator.totals == pytest.approx(replay["totals"], abs=1e-8)
+    env.close()
