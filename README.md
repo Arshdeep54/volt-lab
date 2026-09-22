@@ -8,6 +8,14 @@ Volt Lab coordinates a stationary battery and EV charging under variable solar g
 
 The project investigates whether learned control improves cost, reliability, and charging readiness over a strong tariff-aware heuristic. All published results use synthetic scenarios; baseline losses and training variability remain visible.
 
+## Dashboard preview
+
+![Experiment workspace with reproducible policy settings](docs/assets/experiments.png)
+
+![Scenario replay with energy telemetry and outage events](docs/assets/scenario-replay.png)
+
+![Held-out evaluation across trained agents and baselines](docs/assets/evaluation.png)
+
 ## Run the dashboard
 
 Requires Node.js 22 or newer.
