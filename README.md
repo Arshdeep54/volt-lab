@@ -1,177 +1,166 @@
 # Volt Lab
 
-A reinforcement learning studio for solar battery control and a joint-action EV microgrid. Build intuition by watching a real tabular Q-learning agent train, replaying its decisions, inspecting its Q-values, and comparing it with a rule-based controller.
+**Reinforcement learning for constrained microgrid energy management.**
 
-## Run
+[Live workspace](https://volt-lab-rl-studio.arsh9bl998.workers.dev/) · [Environment contract](docs/environment.md) · [Experiment methodology](docs/experiments.md)
 
-Requires Node.js 20 or newer. The browser app has no application dependencies. Install development dependencies with npm install to use Wrangler.
+Volt Lab coordinates a stationary battery and EV charging under variable solar generation, time-of-use tariffs, grid import limits, and outages. It combines an energy-conserving simulator, tabular Q-learning, a Gymnasium environment, a Stable-Baselines3 DQN comparison, and a deployed experiment dashboard.
+
+The project investigates whether learned control improves cost, reliability, and charging readiness over a strong tariff-aware heuristic. All published results use synthetic scenarios; baseline losses and training variability remain visible.
+
+## Run the dashboard
+
+Requires Node.js 22 or newer.
 
 ```sh
+npm ci
 npm start
 ```
 
-Open http://localhost:5173. Use PORT to choose another port. The server binds to all interfaces for preview compatibility; it is a local development server, not a production host. The app can also be served as static files on a host that supports ES modules and Web Workers. Optional Google Fonts fall back to locally available fonts when offline.
+Open http://localhost:5173. The default workspace provides experiments, saved policies, held-out benchmarks, and diagnostics. **Scenario replay** shows live simulated 15-minute transitions at 0.5×, 1×, 2×, or 4× speed. The hourly battery sandbox and RL glossary remain under reference/help.
 
-## Microgrid demo
+Browser training runs in a Web Worker and saves completed Q-learning experiments to IndexedDB. Reload starts with the reference policy; saved experiments remain available to load. Export/import JSON to transfer a completed Q-table. Scenario links share scenario settings and load the reference policy, not the sender's trained model. Each visitor has independent local state.
 
-Open /?lab=microgrid or choose **Microgrid lab**. Start live telemetry, step through 15-minute intervals, and compare learned, rule-based, and no-battery controllers. Use **Grid outage** and **EV departure** to advance through the actual physics to those moments. Choose cloudy or outage scenarios, train a fresh joint policy, and inspect held-out evaluation. **Share scenario** copies the scenario URL; each friend loads the reference model and runs their own simulation. Export JSON to save your trained model and telemetry.
+## Run the Python environment
 
-Live means simulated telemetry generated at selectable 0.5×, 1×, 2×, and 4× speeds. Normal speed advances one 15-minute interval per second. It is not connected-device data or a shared server session. Cloudflare serves static assets; simulation and training execute in each visitor’s browser. Reload restores the reference policy.
-
-## Microgrid environment contract
-
-- Seven days × 96 intervals = 672 steps; each lasts 15 minutes.
-- Stationary battery: 10 kWh, initial 5 kWh, 3 kW power limit, 95% efficiency in each direction.
-- EV: 40 kWh capacity, initial 24 kWh, goal 32 kWh (80%) at 07:00. Home from 18:00 to 07:00; daily synthetic travel consumes 10–17 kWh. Charging rates: off, 1.8 kW, and 3.6 kW, with 92% efficiency.
-- Nine joint actions combine three battery actions with three EV charging rates.
-- Grid import limit: 5 kW. Essential household demand has priority over EV charging and battery charging. Surplus solar is curtailed; no export revenue.
-- Mixed and cloudy scenarios have one one-hour evening outage. The outage stress test has three-hour interruptions on days 3 and 6.
-- Approximate observation: hour × six battery SOC buckets × three EV deficit buckets × three net-demand buckets × three urgency categories × grid availability = 7,776 states. The table has 69,984 action values. Minute, exact charge, day, and future weather are omitted.
-- Reward is the negative interval objective: grid bill + battery wear ($0.015/kWh moved) + carbon cost ($0.05/kg) + unserved household penalty ($4/kWh) + EV shortfall penalty ($2/kWh). Terminal settlement values the difference from initial battery and EV energy at $0.12/kWh. These prices and penalties are modeling choices.
-- α = 0.2, γ = 0.995; ε decays from 1 to 0.05 over the first 80% of training. Empty Q-tables break greedy ties by idling the battery and leaving EV charging off.
-- Training seed × 100,000 + episode determines each mixed-weather training week. Validation uses seeds 810000001–810000002; testing uses 910000001–910000010 in each profile. Live scenarios use 920000001–920000003.
-- Curves summarize blocks of 50 episodes; validation averages two fixed weeks. Final evaluation averages ten held-out weeks per profile. Partial training never replaces the completed policy or results.
-- The 6,000-episode reference budget was selected using separate validation comparisons with 12,000 and 24,000 episodes. It is one training seed, not a multi-seed performance claim.
-
-The mixed-weather reference objective is **$40.83/week** for Q-learning, **$37.54** for the rule-based controller, and **$62.21** without the stationary battery. Q-learning produces 100.7 kg of modeled grid emissions versus 112.6 kg for the rule, while EV departure readiness is 98.6% versus 100%. The rule wins the combined objective; the dashboard preserves that result.
-
-```mermaid
-flowchart LR
-    Scenario[Seeded solar + home demand + grid + travel] --> Environment[MicrogridEnv: 672 intervals]
-    Environment --> Observation[Hour + battery + EV deficit + urgency + grid]
-    Observation --> Policy[Q-table: 7,776 states × 9 actions]
-    Policy --> JointAction[Battery action × EV rate]
-    JointAction --> Physics[Supply limits + efficiency + household priority]
-    Physics --> Deadlines[EV departure + unmet demand + settlement]
-    Deadlines --> Reward[Negative combined cost + next observation]
-    Reward --> Learning[TD update during training]
-    Learning --> Policy
-    Physics --> Environment
-    Physics --> Dashboard[Live telemetry + events + charts]
-    Policy --> Evaluation[Held-out tests vs baselines]
-    Cloudflare[Cloudflare Worker: static assets] --> Browser[Visitor browser]
-    Browser --> Dashboard
-    Browser --> Trainer[Web Worker: training + evaluation]
-    Trainer --> Learning
-```
-
-## Cloudflare Workers deployment
-
-Live demo: [Volt Lab microgrid](https://volt-lab-rl-studio.arsh9bl998.workers.dev/?lab=microgrid).
-
-A new assets-only Worker named **volt-lab-rl-studio**, configured in wrangler.jsonc, serves only the public files copied into dist/. Node’s development server is not deployed.
+The locked CPU environment is verified on Linux x86_64 with Python 3.12. Run from the repository root.
 
 ```sh
-npm install
-npm run build
-npx wrangler deploy --dry-run
-npm run deploy
+python3.12 -m venv .venv
+.venv/bin/pip install -r requirements.lock
+.venv/bin/pip install --no-deps -e .
+.venv/bin/pytest -q
 ```
 
-Wrangler uses your authenticated Cloudflare account; credentials are never included in public assets. For a different account, update account_id and choose your own Worker name. Hosting uses workers.dev. The build includes security headers and excludes tests, screenshots, node_modules, and local configuration. No database or server-side training service is required.
+Use the environment independently:
 
-## Microgrid verification and files
+```python
+from volt_lab import MicrogridEnv
+
+env = MicrogridEnv(profile="outage")
+observation, info = env.reset(seed=42)
+observation, reward, terminated, truncated, info = env.step(8)
+env.close()
+```
+
+Actions are a Discrete(9) Cartesian product of battery charge/idle/discharge and EV off/slow/fast charging. Python DQN uses six normalized observation buckets containing the same information as the default tabular agent. Full-week parity fixtures verify equivalent JavaScript and Python scenarios, states, transitions, and objectives.
+
+## Reproduce the experiments
 
 ```sh
-npm test
-node scripts/microgrid-reference.mjs
-node scripts/verify-microgrid-ui.mjs
+npm run benchmark:microgrid
+npm run ablations
+.venv/bin/python -m volt_lab.train --timesteps 100000 --seeds 42 43 44
 ```
 
-The optional browser test uses the same Playwright setup as the battery test below. Both accept BASE_URL to verify a published Worker. Microgrid checks include live stepping, outage/departure events, training pause/resume, stable evaluation, JSON export, scenario sharing, and mobile layout.
+Q-learning: five seeds, 6,000 episodes per seed. Ablations: four variants × five seeds at the same budget. DQN: three seeds, 100,000 environment steps per seed. Every final controller is tested greedily on ten held-out weeks per profile; validation and test scenario seeds are separate from training.
 
-- src/microgrid.mjs — joint-action physics, scenarios, Q-learning, and evaluation.
-- src/microgrid-worker.mjs — asynchronous policy training.
-- src/microgrid-view.mjs — live telemetry, controls, events, and results.
-- src/microgrid-reference.json — actual 6,000-episode policy.
-- scripts/microgrid-reference.mjs — reproduce the reference experiment.
-- scripts/build.mjs and wrangler.jsonc — packaging and deployment.
+Curated reports live in experiments/results/. DQN model ZIP files are in experiments/models/ with SHA-256 hashes in the report. Generated Q-table artifacts go to experiments/local/ and are excluded from Git. The browser ships one reproducible reference Q-table and exposes the aggregate reports.
 
-## Battery demo in three minutes
+## Published results
 
-1. Open **Environment** and play the seven-day replay. Scrub the timeline, switch controllers, change weather, and inspect the chosen action and learned Q-values.
-2. Open **Training lab**, choose a seed and budget, and train. Pause and resume. Explain how exploration decays while the Q-table changes.
-3. Open **Evaluation** and compare weekly costs. Run the five-seed benchmark to show the variation between independently trained agents.
-4. Open **How it works** to walk through the architecture flowchart.
-5. Open **RL field guide** to search the 29 concepts. Export the run as JSON to retain the settings, Q-table, learning curve, and results.
+Mixed-weather held-out evaluation. Objectives include grid electricity, wear, carbon cost, missed EV goals, unmet household energy, and terminal settlement.
 
-The initial dashboard displays an actual reproducible training run, generated by scripts/reference.mjs. It is not an animated mock. New training happens in a background browser worker. Runs remain in memory; reload restores the reference run. Export before reloading to retain an experiment.
+| Controller            | Objective / week | Grid CO₂ kg / week | EV departures ready | Unserved household kWh / week |
+| --------------------- | ---------------: | -----------------: | ------------------: | ----------------------------: |
+| Q-learning, 5 seeds   |  $55.97 ± $10.40 |              108.6 |               70.6% |                          0.20 |
+| DQN, 3 seeds          | $107.16 ± $38.94 |              109.9 |               33.3% |                          1.96 |
+| Rule-based            |           $37.54 |              112.6 |              100.0% |                          0.00 |
+| No stationary battery |           $62.21 |              123.6 |              100.0% |                          2.51 |
+
+± is the sample standard deviation across independent training seeds, not a confidence interval. Baselines are deterministic on the fixed scenario set, so repeated training seeds do not create independent baseline samples. Q-learning and DQN have different training budgets; this is not a compute-matched algorithm ranking.
+
+The initial browser reference is seed 42, with a $40.83/week mixed-weather objective. That single policy is intentionally distinguished from the five-seed mean. The heuristic wins the combined objective. DQN at the published budget performs worse, particularly on EV readiness. The reports support environment and evaluation analysis, not a claim of real-world savings or algorithm superiority.
+
+Ablations evaluate every policy under the original objective weights:
+
+| Training variant                            | Common objective / week |
+| ------------------------------------------- | ----------------------: |
+| Default reward and hourly buckets           |         $55.97 ± $10.40 |
+| Remove carbon cost during training          |         $44.75 ± $10.18 |
+| Double EV shortfall penalty during training |         $47.38 ± $10.58 |
+| Use quarter-hour time buckets               |         $82.55 ± $27.77 |
+
+Removing carbon cost and increasing the EV penalty improved the mean common objective in these fixed experiments, but neither mean beats the heuristic. Finer time buckets expand the table fourfold and perform worse at this budget. These are observed comparisons, not changes selected using the test set.
 
 ## Architecture
 
 ```mermaid
 flowchart LR
-    Scenarios[Seeded synthetic demand + solar + tariff] --> Env[BatteryEnv: 168 hourly steps]
-    Env --> State[Discrete observation: hour × SOC × net demand]
-    State --> Agent[Q-table: 792 states × 3 actions]
-    Agent --> Action[ε-greedy: charge / idle / discharge]
-    Action --> Physics[Capacity + power limits + efficiency]
-    Physics --> Reward[Reward + next state + terminal flag]
-    Reward --> Update[Q-learning TD update]
-    Update --> Agent
-    Physics --> Env
-    Worker[Web Worker: training + validation] --> Env
-    Update --> UI[Dashboard: progress snapshots every 25 episodes]
-    Agent --> Evaluation[Greedy evaluation: 20 held-out weeks]
-    Baselines[Rule-based + no battery] --> Evaluation
-    Evaluation --> Results[Costs + five-seed variability + JSON export]
+    Scenario[Seeded profiles + travel + grid outages] --> Physics[Energy-conserving microgrid simulator]
+    Physics --> Observation[Six approximate observation buckets]
+    Observation --> Q[Tabular Q-learning]
+    Observation --> Gym[Gymnasium environment]
+    Gym --> DQN[Stable-Baselines3 DQN]
+    Q --> Joint[Battery action × EV charging rate]
+    DQN --> Joint
+    Joint --> Physics
+    Physics --> Reward[Cost components + terminal settlement]
+    Reward --> Q
+    Reward --> Gym
+    Q --> Evaluation[Greedy held-out evaluation]
+    DQN --> Evaluation
+    Rules[Rule-based + no battery baselines] --> Evaluation
+    Evaluation --> Reports[Versioned reports + model artifacts]
+    Cloudflare[Cloudflare Worker: static assets] --> Browser[Experiment dashboard]
+    Reports --> Browser
+    Browser --> Worker[Web Worker: Q-learning]
+    Worker --> Q
+    Browser --> Storage[IndexedDB: saved Q-learning runs]
 ```
 
-### Environment contract
+Cloudflare serves static assets. Simulation and Q-learning training execute in visitors' browsers. Python DQN training runs offline and publishes completed reports and model artifacts; it is not a server-side service exposed by the dashboard.
 
-- Battery: 10 kWh; maximum grid-side charging/discharging power: 2.5 kW; each step: 1 hour.
-- Each charge/discharge direction has 95% efficiency (90.25% round-trip).
-- Action 0 charges, 1 idles, 2 discharges. Impossible power is physically clipped. Discharge cannot exceed the house's remaining demand. Surplus solar is curtailed; there is no export payment.
-- State: 24 hours × 11 rounded SOC buckets × 3 net-demand buckets = 792 states. This is an approximate state representation: day index and hidden weather variation are omitted. It is not a fully observed Markov state.
-- Reward = −(grid bill + battery wear + terminal energy settlement). Wear is $0.015 per kWh moved through the battery.
-- Initial charge is 5 kWh. At the end, settlement adds (5 − final SOC) × $0.12 to cost, avoiding a free initial-energy comparison. This accounting convention is a modeling choice, not an exact market liquidation value.
-- The no-battery baseline uses an idle battery; its unchanged SOC means no wear or settlement, so its cost equals the grid bill.
-- Terminal transitions use reward alone. Other transitions bootstrap from the maximum next-state Q-value.
-- α = 0.25; γ = 0.97; ε decreases from 1 to 0.05 over the first 75% of training.
-
-### Evaluation protocol
-
-Training scenario seed = training seed × 100,000 + episode index. UI training seeds are 42–46 and budgets are 1,200 / 4,000 / 10,000 episodes. Validation uses 800000001–800000003; final testing uses 900000001–900000020. Training choices use a separate seeded PRNG.
-
-The evaluation policy is greedy with ε = 0. Each controller sees identical test scenarios. Cost is an undiscounted weekly objective in USD, including wear and settlement. Learning uses discounted returns; the chart displays undiscounted returns. Training is a mean across each block of 25 episodes; validation is a mean across three fixed weeks. TD error is a mean across steps of the latest training episode. Final evaluation remains pending until training completes.
-
-The five-seed benchmark reports mean and sample standard deviation of each agent's mean test cost. This is training-seed variability, not a confidence interval or a measurement of all scenario uncertainty. Changing replay weather does not retrain the agent or change the held-out benchmark.
-
-At 1,200 episodes, the reference seed 42 obtains $36.19/week versus $43.02 without a battery and $27.86 for the rule-based controller. It saves 15.9% versus no battery but loses to the stronger heuristic. The dashboard shows this honestly. Performance is not guaranteed to improve monotonically with a larger training budget.
-
-## Verification and reproducibility
+## Verification
 
 ```sh
 npm test
-npm run benchmark
-node scripts/reference.mjs
+npm run format:check
+npm run build
+npx playwright install chromium
+npm start
+# In another terminal:
+npm run test:browser
+
+.venv/bin/ruff check python
+.venv/bin/ruff format --check python
+.venv/bin/pytest -q
 ```
 
-Tests cover reproducible scenarios, conservation of energy, capacity limits, terminal behavior, fair evaluation, deterministic training, and learning improvement on fixed validation scenarios.
+JavaScript tests cover energy balance, device/grid limits, departure timing, reproducibility, terminal accounting, playback cadence, artifact validation, report/model integrity, and static-server boundaries. Python checks include Gymnasium/SB3 validation, full-week cross-language parity, and DQN model restoration. Three browser suites cover training, evaluation, persistence, malformed imports, sharing, exports, replay, responsive layout, and browser errors. BASE_URL can point browser verification at the published Worker.
 
-For the optional browser smoke test, install Playwright as a development tool (no runtime dependency), install its Chromium browser, and keep the app running:
+A GitHub Actions workflow is prepared locally with pinned action revisions and locked dependencies. It is intentionally excluded from the repository until workflow authorization is enabled. The commands above run all checks locally.
+
+## Project structure
+
+```text
+src/microgrid/       scenarios, physics, Q-learning, policies, evaluation
+src/experiments/     artifact schema, statistics, IndexedDB persistence
+src/ui/              charts, scene, view components, reference/help
+src/app.mjs          navigation and browser orchestration
+python/volt_lab/     Gymnasium API, matching physics, DQN experiments
+shared/parity.json  complete JavaScript/Python transition fixtures
+experiments/results/ curated multi-seed reports
+experiments/models/  saved DQN policies
+scripts/             builds, experiment runners, browser verification
+tests/               JavaScript behavior and integrity checks
+python/tests/        environment and DQN checks
+```
+
+## Deployment
 
 ```sh
-npm install --no-save playwright
-npx playwright install chromium
-node scripts/verify-ui.mjs
+npm run deploy
 ```
 
-## Project map
+Wrangler builds and deploys the explicit public assets to the volt-lab-rl-studio Worker. The build records the Git commit plus environment/scenario source hashes in the dashboard's metadata. Tests, local training artifacts, credentials, Python files, and dependency directories are excluded from the deployment. Use your own Cloudflare account and Worker name when deploying a fork.
 
-- src/rl.mjs — seeded scenario generator, battery physics, Q-learning, baselines, evaluation.
-- src/worker.mjs — asynchronous training, pause/resume, progress snapshots, five-seed benchmarking.
-- src/app.mjs — dashboard, replay, charts, architecture, glossary, experiment export.
-- src/reference.json — reproducible actual reference experiment.
-- scripts/reference.mjs — regenerate the reference dataset.
-- scripts/benchmark.mjs — reproduce the five-seed benchmark in Node.
-- scripts/verify-ui.mjs — browser smoke test.
-- server.mjs — minimal static development server.
+## Scope and limitations
 
-## What this MVP demonstrates
-
-Custom RL environment engineering, physical constraints, observation discretization, reward accounting, TD learning, exploration, reproducible evaluation, baseline comparisons, and explainable visualization. The stack is ES modules, CSS, inline SVG, Web Workers, and Node's built-in HTTP and test APIs.
-
-It does not implement Gymnasium, a neural-network policy, DQN, PPO, SAC, real weather/utility data, an optimizer baseline, or deployment authentication. Tariffs and profiles are synthetic; no real-world savings claim follows from these results.
-
-A sensible next version is a Python Gymnasium adapter with DQN, a stronger optimization baseline, and real held-out demand/solar data. Keep the environment and evaluation contract first; swap the agent second.
+- Profiles, tariffs, trips, outages, and carbon intensity are synthetic.
+- Observations are approximate and omit day, remaining horizon, exact charge, and hidden weather. The simulator's full internal state is not exposed as a fully observed Markov state.
+- Household demand has priority over EV and stationary battery charging. Actions are clipped to physical supply; excess solar is curtailed. There is no export revenue, bidirectional EV discharge, thermal model, or real device integration.
+- Reward weights and terminal energy valuation are explicit modeling choices.
+- The DQN comparison uses the same information and physics, but a substantially different training budget.
+- Browser experiment storage is local to one browser profile, without shared accounts or server persistence.
+- The study does not establish statistical significance or real-world energy savings.
