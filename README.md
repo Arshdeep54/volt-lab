@@ -161,7 +161,7 @@ python/tests/        environment and DQN checks
 npm run deploy
 ```
 
-The public dashboard is hosted at https://volt.hiesenbug.dev/. Its custom domain is connected to the volt-lab-rl-studio Worker in Cloudflare. Wrangler builds and deploys the explicit public assets to that Worker. The build records the Git commit plus environment/scenario source hashes in the dashboard's metadata. Tests, local training artifacts, credentials, Python files, and dependency directories are excluded from the deployment. Use your own Cloudflare account and Worker name when deploying a fork.
+The public dashboard is hosted at https://volt.hiesenbug.dev/. Its custom domain is connected to the volt-lab-rl-studio Worker in Cloudflare. Wrangler builds and deploys the explicit public assets to that Worker. The build records the Git commit plus environment/scenario source hashes in the dashboard's metadata. Tests, local training artifacts, credentials, Python files, and dependency directories are excluded from the deployment. The content security policy allows Cloudflare's injected Web Analytics beacon and collection endpoint, following [Cloudflare's CSP guidance](https://developers.cloudflare.com/fundamentals/reference/policies-compliances/content-security-policies/). Use your own Cloudflare account and Worker name when deploying a fork.
 
 ## Scope and limitations
 
