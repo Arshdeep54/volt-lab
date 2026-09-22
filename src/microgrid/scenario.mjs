@@ -1,5 +1,5 @@
 import { random } from '../rl.mjs';
-export function generateMicrogrid(seed, profile = 'balanced') {
+export function generateMicrogrid(seed, profile = 'balanced', { outageHours = 3 } = {}) {
   const rng = random(seed),
     rows = [],
     outageDay = Math.floor(rng() * 7);
@@ -12,7 +12,7 @@ export function generateMicrogrid(seed, profile = 'balanced') {
         hour = Math.floor(time),
         minute = (quarter % 4) * 15;
       const gridAvailable = !(profile === 'outage'
-        ? (day === 2 || day === 5) && time >= 17 && time < 20
+        ? (day === 2 || day === 5) && time >= 17 && time < 17 + outageHours
         : day === outageDay && time >= 18 && time < 19);
       rows.push({
         day,

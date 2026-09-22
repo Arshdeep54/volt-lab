@@ -1,4 +1,5 @@
 export const MICRO_CONFIG = Object.freeze({
+  observation: 'hourly',
   dt: 0.25,
   steps: 672,
   capacity: 10,
@@ -25,3 +26,6 @@ export const MICRO_TEST_SEEDS = Array.from(
   (_, i) => 910000001 + i
 );
 export const MICRO_VALIDATION_SEEDS = [810000001, 810000002];
+
+export const MICRO_ENV_VERSION = 'microgrid-v1';
+export const stateCount = (config) => (config.observation === 'quarter-hour' ? 96 : 24) * 6 * 3 * 3 * 3 * 2;

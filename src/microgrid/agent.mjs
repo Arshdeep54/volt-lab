@@ -1,12 +1,14 @@
+import { MICRO_CONFIG, stateCount } from './config.mjs';
 import { random } from '../rl.mjs';
 import { MicrogridEnv } from './environment.mjs';
 import { generateMicrogrid } from './scenario.mjs';
 import { microGreedy } from './policies.mjs';
 export class MicrogridAgent {
-  constructor(seed = 42) {
+  constructor(seed = 42, config = {}) {
+    this.config = Object.freeze({ ...MICRO_CONFIG, ...config });
     this.seed = seed;
     this.rng = random(seed);
-    this.q = new Float32Array(7776 * 9);
+    this.q = new Float32Array(stateCount(this.config) * 9);
     this.epsilon = 1;
     this.alpha = 0.2;
     this.gamma = 0.995;
@@ -14,7 +16,8 @@ export class MicrogridAgent {
   trainEpisode(episode, total) {
     this.epsilon = Math.max(0.05, 1 - episode / (total * 0.8));
     const env = new MicrogridEnv(
-      generateMicrogrid(this.seed * 100000 + episode)
+      generateMicrogrid(this.seed * 100000 + episode),
+      this.config
     );
     let error = 0;
     while (!env.done) {

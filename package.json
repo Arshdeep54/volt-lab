@@ -9,7 +9,9 @@
     "benchmark": "node scripts/benchmark.mjs",
     "build": "node scripts/build.mjs",
     "predeploy": "npm run build",
-    "deploy": "wrangler deploy"
+    "deploy": "wrangler deploy",
+    "benchmark:microgrid": "node scripts/run-experiments.mjs 6000 benchmark",
+    "ablations": "node scripts/run-experiments.mjs 6000 ablations"
   },
   "devDependencies": {
     "wrangler": "^4.148.0"

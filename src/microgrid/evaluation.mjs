@@ -5,7 +5,9 @@ import { microGreedy, microRule } from './policies.mjs';
 export function evaluateMicrogrid(
   agent,
   seeds = MICRO_TEST_SEEDS,
-  profile = 'balanced'
+  profile = 'balanced',
+  config = agent.config,
+  scenarioOptions = {}
 ) {
   const result = { scenarios: seeds.length, profile };
   for (const controller of ['learned', 'rule', 'noBattery']) {
@@ -20,7 +22,7 @@ export function evaluateMicrogrid(
       readyDepartures: 0,
     };
     for (const seed of seeds) {
-      const env = new MicrogridEnv(generateMicrogrid(seed, profile));
+      const env = new MicrogridEnv(generateMicrogrid(seed, profile, scenarioOptions), config);
       while (!env.done) {
         const rule = microRule(env);
         env.step(
