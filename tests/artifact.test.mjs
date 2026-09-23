@@ -43,6 +43,10 @@ test('imports reject missing metadata before it can reach the dashboard', async 
     delete run[field];
     assert.throws(() => validateRun(run), /metadata/);
   }
+  assert.throws(
+    () => validateRun({ ...createRun(model), createdAt: 2026 }),
+    /Unsupported/
+  );
 });
 
 test('import verification replaces claimed scores under the common objective', async () => {

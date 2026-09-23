@@ -108,12 +108,17 @@ try {
   assert.equal(await page.locator('.history-panel tbody tr').count(), 1);
   await page.locator('.nav-item[data-view="evaluation"]').click();
   assert.equal(await page.locator('.benchmark-table tbody tr').count(), 4);
+  assert.equal(await page.locator('.study-benchmark tbody tr').count(), 3);
+  assert.equal(await page.locator('.study-curves svg').count(), 2);
+  assert.equal(await page.locator('.study-profiles tbody tr').count(), 3);
+  assert.match(await page.locator('.study-benchmark').innerText(), /400,512/);
   assert.match(
     await page.locator('main').innerText(),
     /different training budgets/
   );
   await page.locator('.nav-item[data-view="diagnostics"]').click();
   assert.equal(await page.locator('.report-grid tbody tr').count(), 9);
+  assert.equal(await page.locator('.cost-breakdown tbody tr').count(), 5);
   assert.match(
     await page.locator('main').innerText(),
     /quarter-hour-observation/

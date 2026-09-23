@@ -22,6 +22,11 @@ test('development server exposes only public assets and curated reports', async 
       (await fetch(base + '/src/reports/benchmark.json')).status,
       200
     );
+    assert.equal((await fetch(base + '/src/reports/study.json')).status, 200);
+    assert.equal(
+      (await fetch(base + '/experiments/local/study.json')).status,
+      404
+    );
   } finally {
     child.kill();
   }

@@ -18,7 +18,7 @@ const server = http.createServer(async (req, res) => {
       url.pathname === '/' ? '/index.html' : url.pathname
     );
     const publicFiles = ['/index.html', '/styles.css'];
-    const reportFiles = ['benchmark.json', 'ablations.json', 'dqn.json'];
+    const reportFiles = ['benchmark.json', 'ablations.json', 'dqn.json', 'study.json'];
     let file;
     if (publicFiles.includes(name)) file = path.join(root,name);
     else if (name.startsWith('/src/reports/') && reportFiles.includes(name.slice('/src/reports/'.length))) {

@@ -4,12 +4,13 @@ import { learningPanel } from './microgrid-learning.mjs';
 import { escapeHtml, money, number } from './format.mjs';
 import { chart } from './chart.mjs';
 import { microGreedy } from '../microgrid/policies.mjs';
+import { studyEvaluation, studyDiagnostics } from './study-views.mjs';
 
 let reports = null;
 export async function loadReports() {
   reports = Object.fromEntries(
     await Promise.all(
-      ['benchmark', 'ablations', 'dqn'].map(async (name) => {
+      ['benchmark', 'ablations', 'dqn', 'study'].map(async (name) => {
         const response = await fetch('/src/reports/' + name + '.json');
         if (!response.ok)
           throw new Error('Benchmark report unavailable: ' + name);
@@ -67,7 +68,7 @@ export function experimentsView() {
         <dt>Code commit</dt><dd>${escapeHtml(run.code.commit || 'local development · not recorded')}</dd>
         <dt>Scenario fingerprint</dt><dd>${escapeHtml(run.dataset.fingerprint || 'local development · not recorded')}</dd>
         <dt>Algorithm</dt><dd>α 0.2 · γ 0.995 · ε floor 0.05</dd>
-        <dt>Evaluation</dt><dd>10 held-out weeks per profile · greedy actions${run.evaluation ? ' · locally recomputed' : ''}</dd>
+        <dt>Evaluation</dt><dd>10 ${run.source === 'import' ? 'reference test' : 'held-out'} weeks per profile · greedy actions${run.evaluation ? ' · locally recomputed' : ''}</dd>
       </dl>
       <div class="chart-caption">A shared scenario link loads the reference policy. Export and import JSON to share a trained Q-table. Python DQN model files and reports are versioned in the repository.</div>
     </section></div>
@@ -133,6 +134,7 @@ export function evaluationView() {
     `<section class="panel"><div class="panel-head"><div><h2 class="panel-title">Mixed-weather benchmark</h2><div class="panel-subtitle">10 held-out weeks per training seed · mean ± sample standard deviation across seeds</div></div><span class="pill">REPRODUCIBLE</span></div>
     <div class="table-scroll"><table class="action-table benchmark-table"><thead><tr><th>Controller</th><th>Objective / week</th><th>Grid CO₂ kg</th><th>EV ready</th><th>Unserved kWh</th></tr></thead><tbody>${rows}</tbody></table></div>
     <div class="chart-caption">Synthetic scenarios. Q-learning and DQN have different training budgets; this is not a compute-matched algorithm ranking. Both observe the same six discrete buckets. ± describes training-seed variability, not a confidence interval.</div></section>
+    ${studyEvaluation(reports.study)}
     <div class="micro-bottom report-grid"><section class="panel"><div class="panel-head"><h2 class="panel-title">Weather and outage generalization</h2></div>
     <div class="table-scroll"><table class="action-table"><thead><tr><th>Profile</th><th>Q-learning</th><th>DQN</th><th>Rule</th></tr></thead><tbody>${profileRows}</tbody></table></div></section>
     <section class="panel"><div class="panel-head"><h2 class="panel-title">Q-learning seed variation</h2></div>
@@ -186,6 +188,7 @@ export function diagnosticsView() {
     <div class="chart-caption">Q-values estimate discounted return, not probability or confidence. Use Scenario replay to change the current state.</div></section>
     <section class="panel"><div class="panel-head"><div><h2 class="panel-title">Outage severity stress test</h2><div class="panel-subtitle">Unserved household energy · mean across ${severityRuns.length} trained policies and 10 weeks</div></div></div>
     <div class="chart-wrap">${chart([{ color: '#168477', values: severity }], { xlabel: 'Outage hours per interruption', ylabel: 'Unserved energy (kWh / week)', minY: 0, height: 230 })}</div>
-    <div class="chart-caption">Policies are frozen. Stress scenarios interrupt the grid twice per week, for 1, 3, or 6 hours.</div></section></div>`
+    <div class="chart-caption">Policies are frozen. Stress scenarios interrupt the grid twice per week, for 1, 3, or 6 hours.</div></section></div>` +
+    studyDiagnostics(reports.study)
   );
 }

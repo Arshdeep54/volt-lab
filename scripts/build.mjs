@@ -30,7 +30,7 @@ async function copySources(source, target) {
   return count;
 }
 await mkdir(new URL('src/reports/', dist), { recursive: true });
-for (const name of ['benchmark', 'ablations', 'dqn']) {
+for (const name of ['benchmark', 'ablations', 'dqn', 'study']) {
   await copyFile(
     new URL('experiments/results/' + name + '.json', root),
     new URL('src/reports/' + name + '.json', dist)

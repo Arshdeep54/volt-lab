@@ -1344,6 +1344,16 @@ footer {
 .report-grid {
   margin-top: 22px;
 }
+.study-curves .legend {
+  flex-wrap: wrap;
+}
+.study-curves .legend span {
+  white-space: nowrap;
+}
+.study-benchmark,
+.cost-breakdown {
+  min-width: 760px;
+}
 .selected-action {
   background: #e8f4f1;
 }

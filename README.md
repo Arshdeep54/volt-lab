@@ -67,6 +67,8 @@ Curated reports live in experiments/results/. DQN model ZIP files are in experim
 
 New DQN training writes models, a replay, and a completion report to a unique `experiments/local/dqn-*/` directory. It never overwrites published models or reports, even when interrupted. The completion report is written last. Use `--observation continuous` to test eight normalized features including exact charge, time until departure, and remaining horizon; the default six-bucket observation and physics remain compatible with published models.
 
+Run the separate matched-transition study with `.venv/bin/python -m volt_lab.study --timesteps 400000`. It compares three Q-learning/DQN variants across three seeds, records validation curves against both interactions and training time, and restores models to explain cost and charging failures. See [the protocol and interpretation](docs/experiments.md#matched-transition-and-observation-study). Results remain separate from the original benchmarks.
+
 ## Published results
 
 Mixed-weather held-out evaluation. Objectives include grid electricity, wear, carbon cost, missed EV goals, unmet household energy, and terminal settlement.
@@ -80,7 +82,18 @@ Mixed-weather held-out evaluation. Objectives include grid electricity, wear, ca
 
 ± is the sample standard deviation across independent training seeds, not a confidence interval. Baselines are deterministic on the fixed scenario set, so repeated training seeds do not create independent baseline samples. Q-learning and DQN have different training budgets; this is not a compute-matched algorithm ranking.
 
-The initial browser reference is seed 42, with a $40.83/week mixed-weather objective. That single policy is intentionally distinguished from the five-seed mean. The heuristic wins the combined objective. DQN at the published budget performs worse, particularly on EV readiness. The reports support environment and evaluation analysis, not a claim of real-world savings or algorithm superiority.
+The initial browser reference is seed 42, with a $40.83/week mixed-weather objective. That single policy is intentionally distinguished from the five-seed mean. The heuristic wins the original comparison. DQN at 100,000 steps performs worse, particularly on EV readiness. The reports support environment and evaluation analysis, not a claim of real-world savings or algorithm superiority.
+
+The separate matched-transition study uses three training seeds per variant:
+
+| Controller / observation | Steps per seed |  Objective / week | EV departures ready |
+| ------------------------ | -------------: | ----------------: | ------------------: |
+| Q-learning / bucketed    |        400,512 |   $70.08 ± $10.94 |               75.2% |
+| DQN / bucketed           |        400,000 | $131.78 ± $136.13 |               38.1% |
+| DQN / continuous         |        400,000 |    $35.77 ± $1.33 |              100.0% |
+| Rule-based               |              — |            $37.54 |              100.0% |
+
+Richer observations improve the DQN mean on mixed-weather weeks, with no unmet household demand in this sample. The same policy family loses to the heuristic on cloudy weeks ($47.19 versus $41.48). Bucketed DQN has one poor run at $287.41/week; it remains in the aggregate. The dashboard shows all three test profiles, validation learning curves, and objective components. These results do not establish statistical significance or isolate the effect of any single added feature.
 
 Ablations evaluate every policy under the original objective weights:
 
@@ -98,7 +111,7 @@ Removing carbon cost and increasing the EV penalty improved the mean common obje
 ```mermaid
 flowchart LR
     Scenario[Seeded profiles + travel + grid outages] --> Physics[Energy-conserving microgrid simulator]
-    Physics --> Observation[Six approximate observation buckets]
+    Physics --> Observation[Six buckets or eight continuous features]
     Observation --> Q[Tabular Q-learning]
     Observation --> Gym[Gymnasium environment]
     Gym --> DQN[Stable-Baselines3 DQN]
@@ -168,9 +181,9 @@ The public dashboard is hosted at https://volt.hiesenbug.dev/. Its custom domain
 ## Scope and limitations
 
 - Profiles, tariffs, trips, outages, and carbon intensity are synthetic.
-- Observations are approximate and omit day, remaining horizon, exact charge, and hidden weather. The simulator's full internal state is not exposed as a fully observed Markov state.
+- Default observations use approximate charge buckets and omit remaining horizon; the continuous study exposes exact charge and horizon but still omits future weather and travel. Neither representation claims a fully observed real-world Markov state.
 - Household demand has priority over EV and stationary battery charging. Actions are clipped to physical supply; excess solar is curtailed. There is no export revenue, bidirectional EV discharge, thermal model, or real device integration.
 - Reward weights and terminal energy valuation are explicit modeling choices.
-- The DQN comparison uses the same information and physics, but a substantially different training budget.
+- The original DQN comparison uses the same information and physics with a different budget. The separate observation study approximately matches transition counts, not compute.
 - Browser experiment storage is local to one browser profile, without shared accounts or server persistence.
 - The study does not establish statistical significance or real-world energy savings.

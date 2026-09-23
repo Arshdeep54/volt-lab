@@ -10,7 +10,7 @@
 | Final testing       | 910000001–910000010                                              |
 | Interactive replay  | 920000001–920000003                                              |
 
-All algorithms use the same physical limits, reward accounting, and default information content. Final policies are greedy. Each controller sees identical test weeks within a profile. Training uses the balanced scenario distribution; cloudy and longer outage profiles test changes in conditions.
+The original algorithm comparison uses the same physical limits, reward accounting, and default information content. The separate observation study changes only information representation. Final policies are greedy. Each controller sees identical test weeks within a profile. Training uses the balanced scenario distribution; cloudy and longer outage profiles test changes in conditions.
 
 The published studies use final policies at fixed budgets. Validation is recorded during training but does not choose checkpoints using the test set. The original browser reference budget was previously selected using separate validation comparisons; it is presented as one reference policy, separately from multi-seed results.
 
@@ -45,11 +45,36 @@ Outage severity is evaluated without retraining. Freeze five default policies an
 
 ## Findings and limits
 
-The tariff-aware rule wins the mixed-weather combined objective. Q-learning's mean beats the no-battery objective but has worse EV readiness. The single reference seed performs much better than the five-seed mean; publishing both prevents a favorable seed from standing in for reproducibility.
+The tariff-aware rule wins the original mixed-weather comparison. Q-learning's mean beats the no-battery objective but has worse EV readiness. The single reference seed performs much better than the five-seed mean; publishing both prevents a favorable seed from standing in for reproducibility.
 
 Removing carbon cost during training lowers the common objective in the measured ablation, despite evaluation retaining carbon cost. This does not establish that carbon penalties are generally harmful. The stronger deadline penalty improves readiness in this sample. Quarter-hour buckets expand the table fourfold and perform worse at the fixed budget; sparse state visitation is a plausible explanation, not a measured causal conclusion.
 
 At 100,000 steps, DQN has poor readiness and high variation. The data do not establish whether a larger budget, different observation, or different hyperparameters would solve it. No changes were selected by repeatedly choosing the best held-out result.
+
+## Matched-transition and observation study
+
+```sh
+.venv/bin/python -m volt_lab.study --timesteps 400000
+```
+
+This separate study compares default Q-learning, bucketed DQN, and continuous-observation DQN across seeds 42, 43, and 44. Both DQN variants receive 400,000 transitions. Q-learning completes its last week, for 596 episodes or 400,512 transitions. The DQN hyperparameters remain fixed; only its observation representation changes. Equal environment interactions do not imply equal computation.
+
+Learning curves use separate validation weeks and show mean objective against environment transitions and elapsed training time. Training time excludes validation, while model run times include final evaluation. Local workload affects timings; the published DQN variants were trained concurrently as single-threaded CPU processes. These times are observations, not hardware-independent performance claims. Policies are fixed at the declared budget and tested once after training; curves do not select checkpoints using final test results. No hyperparameters were tuned against the test set.
+
+The runner writes all outputs to unique ignored local directories. `study.json` is produced only after restoring every model, checking its SHA-256, and reproducing its reported objectives for all three test profiles. It also reproduces the original five 6,000-episode Q-learning policies before analyzing their losses. Only completed, reviewed study reports and their referenced models are published in `experiments/results/study.json` and `experiments/models/`.
+
+| Controller / observation |     Mixed weather |            Cloudy |    Longer outages |
+| ------------------------ | ----------------: | ----------------: | ----------------: |
+| Q-learning / bucketed    |   $70.08 ± $10.94 |   $77.12 ± $10.31 |  $106.28 ± $17.85 |
+| DQN / bucketed           | $131.78 ± $136.13 | $142.94 ± $135.66 | $140.30 ± $131.32 |
+| DQN / continuous         |    $35.77 ± $1.33 |    $47.19 ± $3.73 |    $36.23 ± $1.72 |
+| Rule-based               |            $37.54 |            $41.48 |            $37.54 |
+
+The continuous DQN reaches 100% departure readiness across all three profiles in this fixed sample. It has zero unmet household demand on mixed-weather weeks, 0.008 kWh/week on cloudy weeks, and 0.125 kWh/week under longer outages. Its lower mixed-weather mean does not generalize to a win over the heuristic on cloudy weeks. The bucketed DQN's seed-43 objective is $287.41/week; that poor final policy remains in the aggregate rather than being replaced by a favorable checkpoint.
+
+The cost breakdown reports electricity, battery wear, weighted carbon, unmet-demand penalties, EV shortfall penalties, and terminal settlement. Their sum must equal the combined objective before display rounding. The original Q-learning policies incur $10.67/week in EV shortfall penalties versus $0.08 for the heuristic; their electricity bill is $35.85 versus $28.53. These two differences explain about $17.92 of the $18.43 objective gap in the published mixed-weather experiment. This is an accounting decomposition, not proof of a causal learning mechanism.
+
+Charging diagnostics count intervals where the EV is connected, below target, has grid availability, and the policy chooses charging off. Waiting can be appropriate under tariffs; the count alone does not establish a mistake. Observation results change a bundle of features together, so they cannot identify which single feature caused a performance difference. Three seeds and ten synthetic test weeks per profile do not establish significance or real-world savings.
 
 ## Artifact handling
 
@@ -57,7 +82,7 @@ Browser Q-learning runs use schemaVersion=1 with a run ID, source, timestamp, en
 
 IndexedDB stores completed experiments in the visitor's browser. Loading restores the policy and restarts the scenario; it does not resume a paused training job or replay position. Errors are surfaced. JSON files can transfer policies between browser profiles.
 
-Imports require complete code, dataset, and algorithm metadata before writing to browser storage. Imported evaluation numbers are claims, not evidence: the browser replaces them by greedily evaluating the imported Q-table on all 30 held-out weeks under the default objective weights, retaining its observation encoding. Exports record this local evaluation and its scenario seeds. Training history and claimed training provenance are retained; local evaluation does not authenticate those claims.
+Imports require complete code, dataset, and algorithm metadata before writing to browser storage. Imported evaluation numbers are claims, not evidence: the browser replaces them by greedily evaluating the imported Q-table on all 30 reference test weeks under the default objective weights, retaining its observation encoding. Exports record this local evaluation, the current evaluator's code provenance, and its scenario seeds. Training history and claimed training provenance are retained; local evaluation does not authenticate those claims or establish that external training excluded these scenarios.
 
 Offline curated JSON reports and DQN model ZIP files are tracked. Generated per-run Q-table artifacts remain in ignored experiments/local/. DQN ZIP files are restored through Stable-Baselines3; the browser importer accepts Q-learning JSON only. src/dqn-replay.json contains an actual trajectory from the restored seed-42 DQN policy on replay seed 920000001.
 

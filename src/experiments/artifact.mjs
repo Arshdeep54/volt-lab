@@ -43,7 +43,9 @@ export function validateRun(run) {
     run.project !== 'Volt Lab microgrid' ||
     run.status !== 'complete' ||
     typeof run.id !== 'string' ||
+    run.id.length === 0 ||
     run.id.length > 120 ||
+    typeof run.createdAt !== 'string' ||
     !Number.isFinite(Date.parse(run.createdAt)) ||
     run.environment?.version !== MICRO_ENV_VERSION ||
     run.algorithm?.name !== 'Q-learning'
