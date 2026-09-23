@@ -1,10 +1,12 @@
 import numpy as np
+import pytest
 from stable_baselines3 import DQN
 from volt_lab.env import MicrogridEnv
 
 
-def test_dqn_trains_and_restored_policy_matches(tmp_path):
-    env = MicrogridEnv()
+@pytest.mark.parametrize("observation_mode", ["bucketed", "continuous"])
+def test_dqn_trains_and_restored_policy_matches(tmp_path, observation_mode):
+    env = MicrogridEnv(observation_mode=observation_mode)
     model = DQN(
         "MlpPolicy",
         env,
@@ -33,7 +35,6 @@ def test_published_replay_matches_restored_dqn():
     import json
     from pathlib import Path
 
-    import pytest
     import torch
 
     torch.set_num_threads(1)
