@@ -50,3 +50,22 @@ def test_reset_is_reproducible_and_week_is_terminal():
     np.testing.assert_array_equal(initial, obs)
     with pytest.raises(ValueError):
         env.step(9)
+
+
+def test_continuous_observation_adds_charge_and_horizon_without_changing_physics():
+    normal = MicrogridEnv()
+    richer = MicrogridEnv(observation_mode="continuous")
+    normal.reset(seed=42)
+    observation, _ = richer.reset(seed=42)
+    assert observation.shape == (8,)
+    assert observation[1] == pytest.approx(0.5)
+    assert observation[2] == pytest.approx(0.75)
+    assert observation[6] == 1
+    for index in range(672):
+        _, reward, done, _, record = normal.step(index % 9)
+        observation, other_reward, other_done, _, other_record = richer.step(index % 9)
+        assert richer.observation_space.contains(observation)
+        assert record == other_record
+        assert (reward, done) == (other_reward, other_done)
+    assert observation[6] == 0
+    check_sb3(MicrogridEnv(observation_mode="continuous"), warn=True)

@@ -65,6 +65,8 @@ Q-learning: five seeds, 6,000 episodes per seed. Ablations: four variants × fiv
 
 Curated reports live in experiments/results/. DQN model ZIP files are in experiments/models/ with SHA-256 hashes in the report. Generated Q-table artifacts go to experiments/local/ and are excluded from Git. The browser ships one reproducible reference Q-table and exposes the aggregate reports.
 
+New DQN training writes models, a replay, and a completion report to a unique `experiments/local/dqn-*/` directory. It never overwrites published models or reports, even when interrupted. The completion report is written last. Use `--observation continuous` to test eight normalized features including exact charge, time until departure, and remaining horizon; the default six-bucket observation and physics remain compatible with published models.
+
 ## Published results
 
 Mixed-weather held-out evaluation. Objectives include grid electricity, wear, carbon cost, missed EV goals, unmet household energy, and terminal settlement.

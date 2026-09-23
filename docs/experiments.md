@@ -61,6 +61,10 @@ Imports require complete code, dataset, and algorithm metadata before writing to
 
 Offline curated JSON reports and DQN model ZIP files are tracked. Generated per-run Q-table artifacts remain in ignored experiments/local/. DQN ZIP files are restored through Stable-Baselines3; the browser importer accepts Q-learning JSON only. src/dqn-replay.json contains an actual trajectory from the restored seed-42 DQN policy on replay seed 920000001.
 
+DQN reruns now write to unique ignored `experiments/local/dqn-{observation}-{id}/` directories. A directory without `report.json` is incomplete; each completed seed has its own run JSON. Published evidence is never overwritten by training. Reports include observation and training source hashes. Curve timestamps and `trainingSeconds` exclude validation; total run seconds include final evaluation.
+
+The optional `continuous-v1` observation contains normalized quarter-hour clock, exact battery and EV charge, net household demand, EV connection, time until next departure, remaining week horizon, and grid availability. It changes information only: rewards, actions, scenarios, and physical transitions are identical. It still omits future weather and travel, so it is not a claim of fully observed real-world control. Default `bucketed-v1` models continue to use six features.
+
 Run artifact/model validation before trusting external files. Python model ZIP files should only be loaded from trusted sources.
 
 ## Historical code provenance

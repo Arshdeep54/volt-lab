@@ -8,6 +8,7 @@ import time
 from importlib.metadata import version
 from pathlib import Path
 from statistics import mean, stdev
+from uuid import uuid4
 
 import torch
 from stable_baselines3 import DQN
@@ -35,17 +36,26 @@ HYPERPARAMETERS = dict(
 
 
 class ValidationCallback(BaseCallback):
-    def __init__(self):
+    def __init__(self, observation_mode="bucketed"):
         super().__init__()
         self.curve = []
+        self.observation_mode = observation_mode
+        self.started = time.perf_counter()
+        self.validation_seconds = 0
 
     def _on_step(self):
         if self.num_timesteps % 20000 == 0:
-            validation = evaluate(self.model, VALIDATION_SEEDS)["learned"]["objective"]
+            started = time.perf_counter()
+            seconds = started - self.started - self.validation_seconds
+            validation = evaluate(
+                self.model, VALIDATION_SEEDS, observation_mode=self.observation_mode
+            )["learned"]["objective"]
+            self.validation_seconds += time.perf_counter() - started
             episodes = list(self.model.ep_info_buffer)
             self.curve.append(
                 dict(
                     step=self.num_timesteps,
+                    seconds=seconds,
                     reward=mean(item["r"] for item in episodes) if episodes else 0,
                     validation=-validation,
                     epsilon=float(self.model.exploration_rate),
@@ -58,22 +68,31 @@ class ValidationCallback(BaseCallback):
         return True
 
 
-def train(timesteps=100000, seeds=(42, 43, 44)):
+def train(timesteps=100000, seeds=(42, 43, 44), observation_mode="bucketed"):
+    if (
+        not seeds
+        or len(set(seeds)) != len(seeds)
+        or any(not 0 <= seed < 70_000_000 for seed in seeds)
+    ):
+        raise ValueError("Training seeds must be unique and below 70000000.")
+    if observation_mode not in ("bucketed", "continuous"):
+        raise ValueError("Observation mode must be bucketed or continuous.")
     torch.set_num_threads(1)
-    output = ROOT / "experiments/models"
-    output.mkdir(parents=True, exist_ok=True)
+    output = ROOT / "experiments/local" / f"dqn-{observation_mode}-{uuid4().hex[:12]}"
+    output.mkdir(parents=True)
     runs = []
     commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
     for seed in seeds:
         started = time.perf_counter()
-        env = Monitor(MicrogridEnv())
+        env = Monitor(MicrogridEnv(observation_mode=observation_mode))
         model = DQN("MlpPolicy", env, seed=seed, device="cpu", **HYPERPARAMETERS)
-        callback = ValidationCallback()
+        callback = ValidationCallback(observation_mode)
         model.learn(total_timesteps=timesteps, callback=callback)
+        training_seconds = time.perf_counter() - callback.started - callback.validation_seconds
         model_path = output / f"dqn-seed-{seed}.zip"
         model.save(model_path)
         evaluations = {
-            profile: evaluate(model, profile=profile)
+            profile: evaluate(model, profile=profile, observation_mode=observation_mode)
             for profile in ("balanced", "cloudy", "outage")
         }
         run = dict(
@@ -81,6 +100,7 @@ def train(timesteps=100000, seeds=(42, 43, 44)):
             seed=seed,
             timesteps=model.num_timesteps,
             seconds=time.perf_counter() - started,
+            trainingSeconds=training_seconds,
             hyperparameters=HYPERPARAMETERS,
             curve=callback.curve,
             evaluations=evaluations,
@@ -90,6 +110,7 @@ def train(timesteps=100000, seeds=(42, 43, 44)):
             },
         )
         runs.append(run)
+        (output / f"run-seed-{seed}.json").write_text(json.dumps(run, indent=2) + "\n")
         env.close()
         print(
             f"seed {seed}: test objective {evaluations['balanced']['learned']['objective']:.2f}; {run['seconds']:.1f}s",
@@ -117,6 +138,7 @@ def train(timesteps=100000, seeds=(42, 43, 44)):
                 )
     result = dict(
         schemaVersion=1,
+        status="complete",
         algorithm="DQN",
         environmentVersion=ENVIRONMENT_VERSION,
         provenance={
@@ -130,6 +152,12 @@ def train(timesteps=100000, seeds=(42, 43, 44)):
             "scenarioHash": hashlib.sha256(
                 (ROOT / "python/volt_lab/scenario.py").read_bytes()
             ).hexdigest(),
+            "observationHash": hashlib.sha256(
+                (ROOT / "python/volt_lab/env.py").read_bytes()
+            ).hexdigest(),
+            "trainingHash": hashlib.sha256(
+                (ROOT / "python/volt_lab/train.py").read_bytes()
+            ).hexdigest(),
         },
         protocol={
             "trainingSeeds": list(seeds),
@@ -139,17 +167,17 @@ def train(timesteps=100000, seeds=(42, 43, 44)):
             "testSeeds": TEST_SEEDS,
             "config": CONFIG,
             "selection": "fixed final policy; no test-based checkpoint selection",
-            "observation": "six normalized discrete buckets; same information as hourly tabular agent",
+            "observation": observation_mode,
+            "observationVersion": f"{observation_mode}-v1",
+            "timing": "curve seconds and trainingSeconds exclude validation; run seconds include final evaluation",
             "spread": "sample standard deviation across training seeds",
         },
         runs=runs,
         summary=summary,
     )
-    (ROOT / "experiments/results").mkdir(parents=True, exist_ok=True)
-    (ROOT / "experiments/results/dqn.json").write_text(json.dumps(result, indent=2) + "\n")
     # Export a reproducible trajectory for optional offline DQN replay.
     replay_model = DQN.load(output / f"dqn-seed-{seeds[0]}.zip", device="cpu")
-    replay_env = MicrogridEnv()
+    replay_env = MicrogridEnv(observation_mode=observation_mode)
     obs, _ = replay_env.reset(seed=920000001)
     while not replay_env.simulator.done:
         action, _ = replay_model.predict(obs, deterministic=True)
@@ -162,7 +190,11 @@ def train(timesteps=100000, seeds=(42, 43, 44)):
         telemetry=replay_env.simulator.history,
         totals=replay_env.simulator.totals,
     )
-    (ROOT / "src/dqn-replay.json").write_text(json.dumps(replay))
+    (output / "replay.json").write_text(json.dumps(replay))
+    replay_env.close()
+    # The completion report is written last; partial runs never replace published evidence.
+    (output / "report.json").write_text(json.dumps(result, indent=2) + "\n")
+    print(f"Completed experiment: {output.relative_to(ROOT)}/report.json", flush=True)
     return result
 
 
@@ -170,7 +202,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--timesteps", type=int, default=100000)
     parser.add_argument("--seeds", type=int, nargs="+", default=[42, 43, 44])
+    parser.add_argument("--observation", choices=("bucketed", "continuous"), default="bucketed")
     args = parser.parse_args()
     if args.timesteps < 1000 or args.timesteps > 10_000_000:
         parser.error("timesteps must be between 1000 and 10000000")
-    train(args.timesteps, tuple(args.seeds))
+    train(args.timesteps, tuple(args.seeds), args.observation)

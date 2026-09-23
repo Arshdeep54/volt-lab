@@ -7,12 +7,12 @@ TEST_SEEDS = list(range(910000001, 910000011))
 VALIDATION_SEEDS = [810000001, 810000002]
 
 
-def evaluate(model, seeds=TEST_SEEDS, profile="balanced"):
+def evaluate(model, seeds=TEST_SEEDS, profile="balanced", observation_mode="bucketed"):
     results = {"scenarios": len(seeds), "profile": profile}
     for controller in ("learned", "rule", "noBattery"):
         totals = None
         for seed in seeds:
-            env = MicrogridEnv(profile=profile)
+            env = MicrogridEnv(profile=profile, observation_mode=observation_mode)
             obs, _ = env.reset(seed=seed)
             done = False
             while not done:
