@@ -57,7 +57,10 @@ test('import verification replaces claimed scores under the common objective', a
   run.environment.config.carbonWeight = 0;
   run.model.config.carbonWeight = 0;
   run.model.evaluations.balanced.learned.objective = -1000000;
-  const verified = artifacts.verifyImportedRun(run);
+  const verified = artifacts.verifyImportedRun(run, {
+    commit: 'local-evaluator',
+    scenarioHash: 'current-scenarios',
+  });
   const expected = evaluateMicrogrid(
     verified.model,
     undefined,
@@ -71,6 +74,9 @@ test('import verification replaces claimed scores under the common objective', a
     Array.from({ length: 10 }, (_, i) => 910000001 + i)
   );
   assert.equal(verified.evaluation.config.carbonWeight, 0.05);
+  assert.equal(verified.evaluation.code.commit, 'local-evaluator');
+  assert.equal(verified.evaluation.code.scenarioHash, 'current-scenarios');
+  assert.equal(verified.code.commit, run.code.commit);
   assert.notEqual(
     verified.model.evaluations.balanced.learned.objective,
     -1000000

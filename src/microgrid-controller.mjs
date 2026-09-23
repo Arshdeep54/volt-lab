@@ -331,7 +331,7 @@ export async function microgridImport(file, render, toast) {
     return;
   }
   try {
-    micro.record = await importRun(file);
+    micro.record = await importRun(file, micro.provenance);
     micro.model = micro.record.model;
     micro.savedRuns = await listRuns();
     reset();

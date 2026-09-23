@@ -46,10 +46,10 @@ export async function getRun(id) {
 export async function deleteRun(id) {
   await transaction('readwrite', (store) => store.delete(id));
 }
-export async function importRun(file) {
+export async function importRun(file, provenance = {}) {
   if (file.size > 8 * 1024 * 1024)
     throw new Error('Experiment files must be under 8 MB.');
-  const run = verifyImportedRun(JSON.parse(await file.text()));
+  const run = verifyImportedRun(JSON.parse(await file.text()), provenance);
   await saveRun(run);
   return run;
 }

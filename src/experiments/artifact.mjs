@@ -139,7 +139,7 @@ export function validateRun(run) {
   return run;
 }
 
-export function verifyImportedRun(run) {
+export function verifyImportedRun(run, provenance = {}) {
   validateRun(run);
   const config = { ...MICRO_CONFIG, observation: run.model.config.observation };
   const evaluations = Object.fromEntries(
@@ -157,6 +157,11 @@ export function verifyImportedRun(run) {
       environmentVersion: MICRO_ENV_VERSION,
       config,
       testSeeds: MICRO_TEST_SEEDS,
+      code: {
+        commit: provenance.commit ?? null,
+        environmentHash: provenance.environmentHash ?? null,
+        scenarioHash: provenance.scenarioHash ?? null,
+      },
       verifiedAt: new Date().toISOString(),
     },
   };
