@@ -3,6 +3,7 @@ import { heading } from './layout.mjs';
 import { learningPanel } from './microgrid-learning.mjs';
 import { escapeHtml, money, number } from './format.mjs';
 import { chart } from './chart.mjs';
+import { microGreedy } from '../microgrid/policies.mjs';
 
 let reports = null;
 export async function loadReports() {
@@ -66,7 +67,7 @@ export function experimentsView() {
         <dt>Code commit</dt><dd>${escapeHtml(run.code.commit || 'local development · not recorded')}</dd>
         <dt>Scenario fingerprint</dt><dd>${escapeHtml(run.dataset.fingerprint || 'local development · not recorded')}</dd>
         <dt>Algorithm</dt><dd>α 0.2 · γ 0.995 · ε floor 0.05</dd>
-        <dt>Evaluation</dt><dd>10 held-out weeks per profile · greedy actions</dd>
+        <dt>Evaluation</dt><dd>10 held-out weeks per profile · greedy actions${run.evaluation ? ' · locally recomputed' : ''}</dd>
       </dl>
       <div class="chart-caption">A shared scenario link loads the reference policy. Export and import JSON to share a trained Q-table. Python DQN model files and reports are versioned in the repository.</div>
     </section></div>
@@ -156,7 +157,7 @@ export function diagnosticsView() {
     })
     .join('');
   const qValues = micro.model.q.slice(x.state * 9, x.state * 9 + 9);
-  const best = qValues.indexOf(Math.max(...qValues));
+  const best = microGreedy(micro.model.q, x.state);
   const actions = qValues
     .map(
       (value, action) =>

@@ -336,7 +336,7 @@ export async function microgridImport(file, render, toast) {
     micro.savedRuns = await listRuns();
     reset();
     render();
-    toast('Experiment imported and policy restored.');
+    toast('Policy imported; scores recomputed on 30 held-out weeks.');
   } catch (error) {
     toast('Could not import experiment: ' + error.message);
   }

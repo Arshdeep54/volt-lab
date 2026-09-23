@@ -57,6 +57,8 @@ Browser Q-learning runs use schemaVersion=1 with a run ID, source, timestamp, en
 
 IndexedDB stores completed experiments in the visitor's browser. Loading restores the policy and restarts the scenario; it does not resume a paused training job or replay position. Errors are surfaced. JSON files can transfer policies between browser profiles.
 
+Imports require complete code, dataset, and algorithm metadata before writing to browser storage. Imported evaluation numbers are claims, not evidence: the browser replaces them by greedily evaluating the imported Q-table on all 30 held-out weeks under the default objective weights, retaining its observation encoding. Exports record this local evaluation and its scenario seeds. Training history and claimed training provenance are retained; local evaluation does not authenticate those claims.
+
 Offline curated JSON reports and DQN model ZIP files are tracked. Generated per-run Q-table artifacts remain in ignored experiments/local/. DQN ZIP files are restored through Stable-Baselines3; the browser importer accepts Q-learning JSON only. src/dqn-replay.json contains an actual trajectory from the restored seed-42 DQN policy on replay seed 920000001.
 
 Run artifact/model validation before trusting external files. Python model ZIP files should only be loaded from trusted sources.

@@ -1,8 +1,10 @@
 import {
   MICRO_CONFIG,
   MICRO_ENV_VERSION,
+  MICRO_TEST_SEEDS,
   stateCount,
 } from '../microgrid/config.mjs';
+import { evaluateMicrogrid } from '../microgrid/evaluation.mjs';
 
 export function createRun(model, provenance = {}) {
   const config = { ...MICRO_CONFIG, ...model.config };
@@ -47,6 +49,22 @@ export function validateRun(run) {
     run.algorithm?.name !== 'Q-learning'
   )
     throw new Error('Unsupported experiment artifact.');
+  if (
+    typeof run.source !== 'string' ||
+    !run.source ||
+    run.source.length > 80 ||
+    !run.code ||
+    !run.dataset ||
+    typeof run.dataset.name !== 'string' ||
+    ![run.code.commit, run.code.environmentHash, run.dataset.fingerprint].every(
+      (value) =>
+        value === null || (typeof value === 'string' && value.length <= 128)
+    ) ||
+    run.algorithm.alpha !== 0.2 ||
+    run.algorithm.gamma !== 0.995 ||
+    run.algorithm.epsilonFloor !== 0.05
+  )
+    throw new Error('Invalid experiment metadata.');
   const model = run.model,
     config = run.environment.config;
   if (
@@ -93,7 +111,7 @@ export function validateRun(run) {
     model.curve.length > 2000 ||
     !model.curve.every((point) =>
       ['episode', 'reward', 'validation', 'epsilon', 'error'].every((key) =>
-        Number.isFinite(point[key])
+        Number.isFinite(point?.[key])
       )
     )
   ) {
@@ -119,4 +137,27 @@ export function validateRun(run) {
     }
   }
   return run;
+}
+
+export function verifyImportedRun(run) {
+  validateRun(run);
+  const config = { ...MICRO_CONFIG, observation: run.model.config.observation };
+  const evaluations = Object.fromEntries(
+    ['balanced', 'cloudy', 'outage'].map((profile) => [
+      profile,
+      evaluateMicrogrid(run.model, MICRO_TEST_SEEDS, profile, config),
+    ])
+  );
+  return {
+    ...run,
+    source: 'import',
+    model: { ...run.model, evaluations },
+    evaluation: {
+      method: 'locally recomputed greedy evaluation',
+      environmentVersion: MICRO_ENV_VERSION,
+      config,
+      testSeeds: MICRO_TEST_SEEDS,
+      verifiedAt: new Date().toISOString(),
+    },
+  };
 }

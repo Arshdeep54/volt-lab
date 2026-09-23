@@ -62,6 +62,40 @@ try {
     page,
     () => document.querySelectorAll('.history-panel tbody tr').length === 1
   );
+  const incomplete = structuredClone(artifact);
+  delete incomplete.code;
+  await page.locator('#import-run').setInputFiles({
+    name: 'missing-metadata.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from(JSON.stringify(incomplete)),
+  });
+  await waitFor(page, () =>
+    document
+      .querySelector('#toast')
+      .textContent.includes('Invalid experiment metadata')
+  );
+  assert.equal(await page.locator('.history-panel tbody tr').count(), 1);
+  const forged = structuredClone(artifact);
+  forged.model.evaluations.balanced.learned.objective = -1000000;
+  await page.locator('#import-run').setInputFiles({
+    name: 'claimed-scores.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from(JSON.stringify(forged)),
+  });
+  await waitFor(page, () =>
+    document.querySelector('#toast').textContent.includes('scores recomputed')
+  );
+  const verifiedDownload = page.waitForEvent('download');
+  await page.locator('#export').click();
+  const verifiedFile = await verifiedDownload;
+  const verified = JSON.parse(
+    await readFile(await verifiedFile.path(), 'utf8')
+  );
+  assert.equal(
+    verified.model.evaluations.balanced.learned.objective,
+    artifact.model.evaluations.balanced.learned.objective
+  );
+  assert.equal(verified.evaluation.testSeeds.length, 10);
   const invalid = { ...artifact, model: { ...artifact.model, q: [0] } };
   await page.locator('#import-run').setInputFiles({
     name: 'invalid.json',

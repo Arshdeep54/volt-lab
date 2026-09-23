@@ -1,4 +1,4 @@
-import { validateRun } from './artifact.mjs';
+import { validateRun, verifyImportedRun } from './artifact.mjs';
 
 function database() {
   return new Promise((resolve, reject) => {
@@ -49,7 +49,7 @@ export async function deleteRun(id) {
 export async function importRun(file) {
   if (file.size > 8 * 1024 * 1024)
     throw new Error('Experiment files must be under 8 MB.');
-  const run = validateRun(JSON.parse(await file.text()));
+  const run = verifyImportedRun(JSON.parse(await file.text()));
   await saveRun(run);
   return run;
 }
